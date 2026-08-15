@@ -42,12 +42,12 @@ header h1 .lg{width:9px;height:20px;border-radius:3px;background:linear-gradient
 .card h2::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--accent);flex:none}
 .card h2 .rt{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
 label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;font-weight:600}
-input[type=text],input[type=password],textarea,select{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:16px;font-family:inherit}
+input[type=text],input[type=search],input[type=password],textarea,select{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:16px;font-family:inherit}
 textarea{resize:vertical;line-height:1.7}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1;min-width:150px}
-.btn{border:none;border-radius:11px;padding:11px 16px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;background:var(--accent);color:#062018}
+.btn{border:none;border-radius:11px;padding:11px 16px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;background:var(--accent);color:#062018;text-decoration:none;display:inline-block}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .btn.sec{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
 .btn.blue{background:var(--accent2);color:#04182e}
@@ -59,7 +59,6 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 .alert.err{background:rgba(255,93,108,.10);border-color:rgba(255,93,108,.4);color:#ffb6bd}
 .alert.warn{background:rgba(255,180,84,.10);border-color:rgba(255,180,84,.38);color:#ffd9a3}
 .alert.ok{background:rgba(47,212,167,.10);border-color:rgba(47,212,167,.38);color:#a9f0dc}
-/* 録音ボタン */
 .recwrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:6px 0 2px}
 .recbtn{width:132px;height:132px;border-radius:50%;border:none;cursor:pointer;font-family:inherit;
   background:linear-gradient(180deg,#3ae2b4,#1aa583);color:#052018;font-size:16px;font-weight:800;letter-spacing:.06em;
@@ -71,10 +70,13 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 @keyframes pulse{0%,100%{box-shadow:0 8px 30px rgba(255,93,108,.28)}50%{box-shadow:0 8px 42px rgba(255,93,108,.55)}}
 .timer{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.04em}
 .timer.idle{color:var(--muted)}
+.health{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.health .dot{width:8px;height:8px;border-radius:50%;background:#3a4652;flex:none}
+.health .dot.live{background:var(--accent);box-shadow:0 0 8px var(--accent);animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 .live{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:13px;min-height:120px;max-height:44vh;overflow-y:auto;-webkit-overflow-scrolling:touch;white-space:pre-wrap;word-break:break-word;font-size:15.5px;line-height:1.75}
 .live .interim{color:var(--muted)}
 .live .ph{color:var(--muted);font-size:13.5px}
-/* 一覧 */
 .item{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;touch-action:manipulation}
 .item:active{border-color:var(--accent)}
 .item .t{font-weight:700;font-size:14.5px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -82,26 +84,32 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 .item .p{font-size:12.5px;color:var(--muted);margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .empty{color:var(--muted);font-size:13.5px;text-align:center;padding:26px 10px}
 .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--accent2) 22%,transparent);color:#a8d5ff;border:1px solid rgba(74,163,255,.35)}
-/* 結果 */
+.badge.au{background:color-mix(in srgb,var(--accent) 20%,transparent);color:#9fe9d3;border-color:rgba(47,212,167,.35)}
 .res{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.res.gen{border-color:var(--accent)}
 .res .rh{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .res .rh .name{font-weight:800;font-size:13.5px}
 .res .rh .meta{font-size:11.5px;color:var(--muted);margin-left:auto}
 .body{font-size:15px;line-height:1.8;word-break:break-word}
+.body.stream{white-space:pre-wrap}
 .body h3{font-size:14.5px;margin:16px 0 6px;color:var(--accent)}
 .body h3:first-child{margin-top:0}
 .body ul{margin:6px 0;padding-left:1.25em}
 .body li{margin:3px 0}
 .body p{margin:8px 0}
 .body strong{color:#fff}
+.caret{display:inline-block;width:8px;height:1.05em;background:var(--accent);vertical-align:-2px;animation:blink 1s step-end infinite}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
 @keyframes sp{to{transform:rotate(360deg)}}
+.bar{height:5px;background:#0e1519;border-radius:3px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px;transition:width .25s}
 .hide{display:none!important}
 .sw{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--text);cursor:pointer;user-select:none}
 .sw input{width:auto;margin:0;transform:scale(1.25)}
 .kv{font-size:12.5px;color:var(--muted);margin-top:4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom));background:#0f1a20;border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:11px;font-size:13.5px;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.show{opacity:1}
+audio{width:100%;margin-top:4px}
 </style>
 </head>
 <body>
@@ -129,6 +137,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
     <div class="recwrap">
       <button id="recBtn" class="recbtn"><span class="ico">●</span><span id="recLabel">録音開始</span></button>
       <div id="timer" class="timer idle">00:00</div>
+      <div class="health"><span class="dot" id="hDot"></span><span id="hText">待機中</span></div>
       <div class="btnrow" id="recCtl" style="justify-content:center">
         <button class="btn blue sm hide" id="stopBtn">停止して保存</button>
       </div>
@@ -153,7 +162,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
         <input type="text" id="recTitle" placeholder="例）打ち合わせメモ">
       </div>
     </div>
-    <label class="sw" style="margin-top:12px"><input type="checkbox" id="saveAudio">音声ファイルも保存する（実験的・iPhoneでは認識が不安定になる場合あり）</label>
+    <label class="sw" style="margin-top:12px"><input type="checkbox" id="saveAudio">音声ファイルも保存する（端末内に保存されます）</label>
   </div>
 </section>
 
@@ -161,7 +170,8 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 <section id="v-list" class="hide">
   <div class="card">
     <h2>保存したメモ<span class="rt" id="listCount"></span></h2>
-    <div id="listBox"></div>
+    <input type="search" id="searchBox" placeholder="タイトル・本文・結果を検索" autocomplete="off">
+    <div id="listBox" style="margin-top:12px"></div>
   </div>
 </section>
 
@@ -176,6 +186,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
     <h2>メモ<span class="rt" id="dMeta"></span></h2>
     <label>タイトル</label>
     <input type="text" id="dTitle" placeholder="タイトル">
+    <div id="audioBox" class="hide" style="margin-top:12px"></div>
     <label style="margin-top:12px">文字起こし（自由に修正できます）</label>
     <textarea id="dText" rows="10" placeholder="文字起こし"></textarea>
     <div class="btnrow" style="margin-top:10px">
@@ -207,12 +218,18 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
     <textarea id="freeInput" rows="2" placeholder="例）議事録の形式にまとめて / ToDoだけ箇条書きで抜き出して"></textarea>
     <div class="btnrow" style="margin-top:8px">
       <button class="btn sec sm" data-act="free">この指示で実行</button>
+      <button class="btn danger sm hide" id="abortBtn">中止</button>
     </div>
     <div id="aiStatus" class="note"></div>
+    <div class="bar hide" id="aiBar"><i style="width:0%"></i></div>
   </div>
 
   <div class="card">
     <h2>結果<span class="rt" id="resCount"></span></h2>
+    <div class="res gen hide" id="streamBox">
+      <div class="rh"><span class="name" id="streamName">生成中</span><span class="meta" id="streamMeta"></span></div>
+      <div class="body stream" id="streamBody"></div>
+    </div>
     <div id="resBox"></div>
   </div>
 </section>
@@ -253,6 +270,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
       <p class="note" id="modelNote"></p>
     </div>
     <label class="sw" style="margin-top:12px"><input type="checkbox" id="setAutoClean">録音を停止したら自動で「文字起こしを整える」を実行する</label>
+    <label class="sw" style="margin-top:10px"><input type="checkbox" id="setOverlap">重ね録りで取りこぼしを防ぐ（推奨・端末が対応しない場合は自動で無効化）</label>
   </div>
 
   <div class="card">
@@ -264,6 +282,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
     </div>
     <input type="file" id="importFile" accept="application/json,.json" class="hide">
     <p class="note" id="storeInfo"></p>
+    <p class="note">バックアップに含まれるのは文字と設定だけです。音声ファイルは大きいため含まれません（端末内には残ります）。</p>
   </div>
 
   <div class="card">
@@ -271,9 +290,9 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
     <p class="note" style="margin-top:0">
       ・文字起こしはブラウザ内蔵の音声認識を使うため <b>無料</b> ですが、精度は中程度です。ネット接続が必要です。<br>
       ・iPhone では <b>Safari</b> で開き、画面を点けたまま録音してください（画面ロック・アプリ切替で停止します）。<br>
-      ・長い会議は数分ごとに区切って録音すると取りこぼしが減ります。<br>
-      ・整形／要約／翻訳は Claude API を使うため <b>従量課金</b> です（数十分の会議で数円〜数十円程度）。<br>
-      ・データはこの端末のブラウザ内にのみ保存されます。機種変更前にバックアップを書き出してください。
+      ・iOS は音声認識を数十秒で強制終了するため、<b>重ね録り</b>で切れ目を埋めています。それでも稀に取りこぼします。<br>
+      ・整形／要約／翻訳は Claude API を使うため <b>従量課金</b> です。長い文字起こしは自動で分割して処理します。<br>
+      ・データはこの端末のブラウザ内にのみ保存されます。<b>ホーム画面に追加</b>して使うと消えにくくなります。
     </p>
   </div>
 </section>
@@ -287,8 +306,9 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 /* ============================================================
    定数
 ============================================================ */
-const LS_REC = 'voicememo-records-v1';
+const LS_REC = 'voicememo-records-v1';   // 旧保存先（IndexedDB へ移行）
 const LS_SET = 'voicememo-settings-v1';
+const DB_NAME = 'voicememo', DB_VER = 1;
 
 const RECOG_LANGS = [
   ['ja-JP','日本語'], ['en-US','English (US)'], ['en-GB','English (UK)'],
@@ -301,7 +321,6 @@ const TRANS_LANGS = [
   '英語','日本語','中国語（簡体字）','中国語（繁体字）','韓国語','スペイン語',
   'フランス語','ドイツ語','イタリア語','ポルトガル語','ロシア語','タイ語','ベトナム語','インドネシア語',
 ];
-// CJK 系は単語間スペースを入れない
 const NO_SPACE = ['ja','zh','ko','th'];
 
 const MODELS = [
@@ -312,20 +331,69 @@ const MODELS = [
 
 const ACT_LABEL = { clean:'整形', summary:'要約', translate:'翻訳', free:'自由指示' };
 
+const CHUNK_CHARS = 3500;   // 1回のAPI呼び出しに載せる最大文字数
+const ROTATE_MS   = 20000;  // 認識器を入れ替える間隔
+const OVERLAP_MS  = 1800;   // 重ね録りの重複時間
+
+/* ============================================================
+   IndexedDB
+============================================================ */
+let _dbp = null;
+function db(){
+  if (_dbp) return _dbp;
+  _dbp = new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = () => {
+      const d = req.result;
+      if (!d.objectStoreNames.contains('records')) d.createObjectStore('records', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('audio'))   d.createObjectStore('audio',   { keyPath:'id' });
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error || new Error('IndexedDB を開けません'));
+  });
+  return _dbp;
+}
+function idbReq(store, mode, fn){
+  return db().then(d => new Promise((resolve, reject) => {
+    const t = d.transaction(store, mode);
+    const r = fn(t.objectStore(store));
+    t.oncomplete = () => resolve(r && r.result);
+    t.onerror = t.onabort = () => reject(t.error || new Error('保存に失敗しました'));
+  }));
+}
+const idbAll   = s        => idbReq(s, 'readonly',  o => o.getAll());
+const idbGet   = (s,k)    => idbReq(s, 'readonly',  o => o.get(k));
+const idbPut   = (s,v)    => idbReq(s, 'readwrite', o => o.put(v));
+const idbDel   = (s,k)    => idbReq(s, 'readwrite', o => o.delete(k));
+const idbClear = s        => idbReq(s, 'readwrite', o => o.clear());
+
+function persistAll(){
+  return db().then(d => new Promise((resolve, reject) => {
+    const t = d.transaction('records', 'readwrite');
+    const s = t.objectStore('records');
+    s.clear();
+    records.forEach(r => s.put(r));
+    t.oncomplete = resolve;
+    t.onerror = t.onabort = () => reject(t.error || new Error('保存に失敗しました'));
+  }));
+}
+
 /* ============================================================
    状態
 ============================================================ */
 let settings = loadSettings();
-let records  = loadRecords();
+let records  = [];
 let view = 'record';
 let currentId = null;
+let searchQ = '';
+let audioObjUrl = null;
 
 const rec = {
-  api:null, running:false, paused:false,
-  segments:[], interim:'',
-  startedAt:0, elapsed:0, timerId:null,
-  restarts:[], wakeLock:null,
-  media:null, chunks:[], stream:null, audioUrl:null, audioExt:'m4a',
+  active:null, standby:null, running:false, paused:false,
+  segments:[], interim:'', lang:'ja-JP',
+  startedAt:0, elapsed:0, timerId:null, rotTimer:null, overlapTimer:null,
+  restarts:[], rotations:0, overlap:true, wakeLock:null,
+  media:null, chunks:[], stream:null, audioExt:'m4a',
 };
 
 /* ============================================================
@@ -337,7 +405,7 @@ const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 
 function toast(msg){
   const el = $('#toast'); el.textContent = msg; el.classList.add('show');
-  clearTimeout(toast._t); toast._t = setTimeout(()=>el.classList.remove('show'), 2200);
+  clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 2400);
 }
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 function fmtTime(ms){
@@ -349,27 +417,27 @@ function fmtDate(ts){
   const d = new Date(ts), p = n => String(n).padStart(2,'0');
   return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
+function fmtBytes(b){
+  if (!b) return '0 B';
+  const u = ['B','KB','MB','GB']; let i = 0;
+  while (b >= 1024 && i < u.length-1){ b /= 1024; i++; }
+  return b.toFixed(i ? 1 : 0) + ' ' + u[i];
+}
 
 function loadSettings(){
   let s = {};
   try { s = JSON.parse(localStorage.getItem(LS_SET) || '{}') || {}; } catch(e){}
   return Object.assign({
-    apiKey:'', model:'claude-opus-5', recogLang:'ja-JP', transLang:'英語', autoClean:false
+    apiKey:'', model:'claude-opus-5', recogLang:'ja-JP', transLang:'英語',
+    autoClean:false, overlap:true
   }, s);
 }
 function saveSettings(){ try{ localStorage.setItem(LS_SET, JSON.stringify(settings)); }catch(e){ toast('設定の保存に失敗しました'); } }
 
-function loadRecords(){
-  try { const a = JSON.parse(localStorage.getItem(LS_REC) || '[]'); return Array.isArray(a) ? a : []; }
-  catch(e){ return []; }
-}
-function saveRecords(){
-  try { localStorage.setItem(LS_REC, JSON.stringify(records)); }
-  catch(e){ toast('保存に失敗しました（容量不足の可能性）'); }
-}
+/* 既存の同期呼び出しをそのまま使えるようにした保存ラッパ */
+function saveRecords(){ persistAll().catch(e => toast('保存に失敗しました：' + e.message)); }
 function getRecord(id){ return records.find(r => r.id === id) || null; }
 
-/* かんたん Markdown 描画（見出し・箇条書き・太字のみ） */
 function mdToHtml(src){
   const lines = String(src).replace(/\r/g,'').split('\n');
   const out = []; let ul = false, para = [];
@@ -400,29 +468,64 @@ async function copyText(t){
   }
 }
 
+/* 長文の分割（後読み正規表現を使わない＝古いiOSでも動く） */
+function splitSentences(p){
+  const out = []; let cur = '';
+  for (const ch of p){ cur += ch; if ('。．.!?！？\n'.indexOf(ch) >= 0){ out.push(cur); cur = ''; } }
+  if (cur) out.push(cur);
+  return out;
+}
+function splitText(t, size){
+  t = String(t);
+  if (t.length <= size) return [t];
+  const out = []; let cur = '';
+  const push = () => { if (cur.trim()) out.push(cur.trim()); cur = ''; };
+  for (const p of t.split(/\n{2,}/)){
+    if (cur && (cur + '\n\n' + p).length <= size){ cur += '\n\n' + p; continue; }
+    if (!cur && p.length <= size){ cur = p; continue; }
+    push();
+    if (p.length <= size){ cur = p; continue; }
+    for (const s of splitSentences(p)){
+      if (cur && (cur + s).length > size) push();
+      if (s.length > size){
+        push();
+        for (let i = 0; i < s.length; i += size) out.push(s.slice(i, i + size));
+        continue;
+      }
+      cur += s;
+    }
+  }
+  push();
+  return out.length ? out : [t];
+}
+
 /* ============================================================
-   Claude API
+   Claude API（ストリーミング）
 ============================================================ */
 function modelInfo(id){ return MODELS.find(m => m.id === id) || MODELS[0]; }
 
-async function callClaude(systemPrompt, userText, effort){
+let aborter = null;
+
+async function callClaude(systemPrompt, userText, opt){
+  opt = opt || {};
   const key = (settings.apiKey || '').trim();
   if (!key) throw new Error('API キーが未設定です。');
 
   const info = modelInfo(settings.model);
   const body = {
     model: info.id,
-    max_tokens: 16000,
+    max_tokens: opt.maxTokens || 32000,
     system: systemPrompt,
     messages: [{ role:'user', content: userText }],
+    stream: true,
   };
-  // effort は Opus 5 / Sonnet 5 のみ対応（Haiku 4.5 は非対応）
-  if (info.effort) body.output_config = { effort: effort || 'medium' };
+  if (info.effort) body.output_config = { effort: opt.effort || 'medium' };
 
   let res;
   try {
     res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      signal: opt.signal,
       headers: {
         'content-type': 'application/json',
         'x-api-key': key,
@@ -432,6 +535,7 @@ async function callClaude(systemPrompt, userText, effort){
       body: JSON.stringify(body),
     });
   } catch(e){
+    if (e.name === 'AbortError') throw e;
     throw new Error('通信できませんでした。ネット接続を確認してください。');
   }
 
@@ -440,27 +544,49 @@ async function callClaude(systemPrompt, userText, effort){
     try { const j = await res.json(); if (j && j.error && j.error.message) msg += '：' + j.error.message; } catch(e){}
     if (res.status === 401) msg = 'API キーが正しくないようです（401）。';
     if (res.status === 429) msg = 'リクエストが多すぎます。少し待って再実行してください（429）。';
+    if (res.status === 529) msg = 'サーバーが混雑しています。少し待って再実行してください（529）。';
     throw new Error(msg);
   }
 
-  const data = await res.json();
-  if (data.stop_reason === 'refusal'){
-    throw new Error('この内容には回答できないと判断されました。');
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '', text = '', stop = null, refused = false;
+
+  for(;;){
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream:true });
+    let nl;
+    while ((nl = buf.indexOf('\n')) >= 0){
+      const line = buf.slice(0, nl).trim();
+      buf = buf.slice(nl + 1);
+      if (!line || line.indexOf('data:') !== 0) continue;
+      let ev; try { ev = JSON.parse(line.slice(5).trim()); } catch(e){ continue; }
+      if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta'){
+        text += ev.delta.text;
+        if (opt.onDelta) opt.onDelta(ev.delta.text, text);
+      } else if (ev.type === 'message_delta' && ev.delta){
+        if (ev.delta.stop_reason) stop = ev.delta.stop_reason;
+      } else if (ev.type === 'message_start' && ev.message && ev.message.stop_reason === 'refusal'){
+        refused = true;
+      } else if (ev.type === 'error'){
+        throw new Error((ev.error && ev.error.message) || 'ストリーミング中にエラーが発生しました。');
+      }
+    }
   }
-  const text = (data.content || [])
-    .filter(b => b.type === 'text').map(b => b.text).join('').trim();
+
+  if (stop === 'refusal' || refused) throw new Error('この内容には回答できないと判断されました。');
+  text = text.trim();
   if (!text) throw new Error('応答が空でした。もう一度お試しください。');
-  return { text, truncated: data.stop_reason === 'max_tokens' };
+  return { text, truncated: stop === 'max_tokens' };
 }
 
-/* プロンプト */
-function buildPrompt(act, r, free){
-  const langName = (RECOG_LANGS.find(l => l[0] === r.lang) || ['','日本語'])[1];
-  if (act === 'clean'){
-    return {
-      effort: 'low',
-      system:
-`あなたは音声認識の文字起こしを整える編集者です。入力は${langName}の会話を音声認識したもので、句読点・改行がなく、言い間違いや誤認識が含まれます。
+/* ---------- プロンプト ---------- */
+function langName(code){ return (RECOG_LANGS.find(l => l[0] === code) || ['','日本語'])[1]; }
+
+const SYS = {
+  clean: ln =>
+`あなたは音声認識の文字起こしを整える編集者です。入力は${ln}の会話を音声認識したもので、句読点・改行がなく、言い間違いや誤認識が含まれます。
 
 次のルールで整えてください。
 - 句読点と改行・段落を補い、読みやすくする
@@ -471,14 +597,9 @@ function buildPrompt(act, r, free){
 - 元のテキストの言語のまま出力する
 
 整えた本文だけを出力してください。前置き・後書き・説明は書かないでください。`,
-      user: r.transcript,
-    };
-  }
-  if (act === 'summary'){
-    return {
-      effort: 'medium',
-      system:
-`あなたは会議や打ち合わせの記録をまとめる担当者です。渡された文字起こしを日本語で要約してください。
+
+  summary:
+`あなたは会議や打ち合わせの記録をまとめる担当者です。渡された内容を日本語で要約してください。
 
 次の見出し構成で出力します。該当する内容がない見出しは「特になし」と書いてください。
 
@@ -497,15 +618,9 @@ function buildPrompt(act, r, free){
 ## 未解決・確認事項
 持ち越しになった論点を箇条書きにする。
 
-文字起こしに書かれていないことを推測で補ってはいけません。聞き取れていない箇所は無理に解釈しないでください。要約本文だけを出力し、前置きは書かないでください。`,
-      user: r.transcript,
-    };
-  }
-  if (act === 'translate'){
-    const target = settings.transLang;
-    return {
-      effort: 'low',
-      system:
+書かれていないことを推測で補ってはいけません。聞き取れていない箇所は無理に解釈しないでください。要約本文だけを出力し、前置きは書かないでください。`,
+
+  translate: target =>
 `あなたはプロの翻訳者です。渡されたテキストを${target}に翻訳してください。
 
 - 話し言葉は話し言葉として、自然な${target}にする（直訳しない）
@@ -514,28 +629,47 @@ function buildPrompt(act, r, free){
 - 意味が取れない箇所は無理に訳さず、原文をそのまま残して [?] を付ける
 
 翻訳文だけを出力してください。前置きや解説は書かないでください。`,
-      user: r.transcript,
-    };
-  }
-  // free
-  return {
-    effort: 'medium',
-    system:
-`あなたは音声メモを扱うアシスタントです。ユーザーの指示に従って、渡された文字起こしを処理してください。
-文字起こしに書かれていないことを推測で補ってはいけません。回答は日本語で、結果本文だけを出力してください（前置きは不要）。`,
-    user: `【指示】\n${free}\n\n【文字起こし】\n${r.transcript}`,
-  };
-}
+
+  free:
+`あなたは音声メモを扱うアシスタントです。ユーザーの指示に従って、渡された内容を処理してください。
+書かれていないことを推測で補ってはいけません。回答は日本語で、結果本文だけを出力してください（前置きは不要）。`,
+
+  mapNotes: instruction =>
+`以下は長い文字起こしの一部です。あとで全体をまとめるための素材として、この部分に含まれる情報を漏れなく箇条書きで書き出してください。
+
+- 発言された事実・数値・固有名詞・日付は落とさない
+- 決まったこと、宿題になったことは明示する
+- 요約しすぎず、後で読んで内容が復元できる粒度で書く
+- 前置きは書かず、箇条書きだけを出力する${instruction ? '\n- とくに次の観点に関わる内容は必ず含める：' + instruction : ''}`,
+
+  chunkNote: '\n\n（これは長い文章の一部です。前後の部分は別途処理されるため、この部分だけを対象にしてください。冒頭・末尾が文の途中で切れていても補完しないでください。）',
+};
 
 /* ============================================================
-   録音（Web Speech API）
+   録音（重ね録りローテーション）
 ============================================================ */
 function speechCtor(){ return window.SpeechRecognition || window.webkitSpeechRecognition || null; }
 
 function joinSegments(){
-  const base = (rec.lang || settings.recogLang || 'ja-JP').slice(0,2);
-  const sep = NO_SPACE.includes(base) ? '' : ' ';
+  const base = (rec.lang || 'ja-JP').slice(0,2);
+  const sep = NO_SPACE.indexOf(base) >= 0 ? '' : ' ';
   return rec.segments.join(sep);
+}
+
+/* 重ね録りで生じる重複を吸収して追加する */
+function pushSegment(t){
+  t = String(t || '').trim();
+  if (!t) return;
+  const n = rec.segments.length;
+  const last = n ? rec.segments[n-1] : null;
+  if (last){
+    if (last === t) return;                                   // 完全重複
+    if (last.length >= t.length && last.indexOf(t) >= 0) return; // 既出の一部
+    if (t.length > last.length && t.indexOf(last) === 0){      // 前の断片を含む長い版 → 置換
+      rec.segments[n-1] = t; return;
+    }
+  }
+  rec.segments.push(t);
 }
 
 function renderLive(){
@@ -550,6 +684,14 @@ function renderLive(){
   $('#liveCount').textContent = fin.length.toLocaleString() + ' 文字';
 }
 
+function updateHealth(){
+  const dot = $('#hDot'), t = $('#hText');
+  dot.classList.toggle('live', rec.running && !rec.paused);
+  if (!rec.running){ t.textContent = '待機中'; return; }
+  if (rec.paused){ t.textContent = '一時停止中'; return; }
+  t.textContent = `認識中・入れ替え ${rec.rotations} 回` + (rec.overlap ? '（重ね録り有効）' : '（重ね録り無効）');
+}
+
 function tick(){
   const ms = rec.elapsed + (rec.paused ? 0 : Date.now() - rec.startedAt);
   $('#timer').textContent = fmtTime(ms);
@@ -562,13 +704,14 @@ function releaseWakeLock(){
   try { if (rec.wakeLock){ rec.wakeLock.release(); rec.wakeLock = null; } } catch(e){}
 }
 
-function startRecognition(){
+function makeRecognizer(){
   const Ctor = speechCtor();
   const api = new Ctor();
   api.lang = rec.lang;
   api.continuous = true;
   api.interimResults = true;
   api.maxAlternatives = 1;
+  api._retired = false;
 
   api.onresult = e => {
     let interim = '';
@@ -576,15 +719,23 @@ function startRecognition(){
       const r = e.results[i];
       const t = (r[0] && r[0].transcript || '').trim();
       if (!t) continue;
-      if (r.isFinal) rec.segments.push(t);
+      if (r.isFinal) pushSegment(t);
       else interim += t;
     }
-    rec.interim = interim;
+    // 待機側が音を拾い始めたら即座に主役を交代
+    if (api === rec.standby) promote();
+    if (api === rec.active) rec.interim = interim;
     renderLive();
   };
 
   api.onerror = e => {
     const code = e.error;
+    if (api === rec.standby){
+      // 重ね録りに端末が対応していない → 以後は逐次方式へ
+      rec.standby = null; api._retired = true;
+      if (code !== 'no-speech'){ rec.overlap = false; updateHealth(); }
+      return;
+    }
     if (code === 'not-allowed' || code === 'service-not-allowed'){
       showRecError('マイクの使用が許可されていません。ブラウザの設定でマイクを許可してから再度お試しください。');
       stopRecording(false);
@@ -594,25 +745,85 @@ function startRecognition(){
     } else if (code === 'network'){
       showRecError('音声認識サーバーに接続できません。ネット接続を確認してください。');
     }
-    // no-speech / aborted は onend の自動再開に任せる
   };
 
   api.onend = () => {
+    if (api._retired || api === rec.standby) return;
+    if (api !== rec.active) return;
     if (!rec.running || rec.paused) return;
-    // 暴走ループ防止：10秒間に20回以上の再開で停止
+    // 想定外の停止 → すぐ作り直す（安全網）
     const now = Date.now();
     rec.restarts = rec.restarts.filter(t => now - t < 10000);
     rec.restarts.push(now);
-    if (rec.restarts.length > 20){
+    if (rec.restarts.length > 25){
       showRecError('音声認識が繰り返し停止しました。いったん録音を停止します。');
       stopRecording(true);
       return;
     }
-    try { api.start(); } catch(e){ /* 既に開始済み */ }
+    rec.rotations++;
+    startActive();
+    updateHealth();
   };
 
-  rec.api = api;
-  api.start();
+  return api;
+}
+
+function startActive(){
+  const api = makeRecognizer();
+  rec.active = api;
+  try { api.start(); } catch(e){ /* 直後の再startは無視 */ }
+  scheduleRotate();
+}
+
+function scheduleRotate(){
+  clearTimeout(rec.rotTimer);
+  rec.rotTimer = setTimeout(rotate, ROTATE_MS);
+}
+
+/* 停止させられる前に、こちらから先回りして入れ替える */
+function rotate(){
+  if (!rec.running || rec.paused) return;
+  if (!rec.overlap){ // 逐次方式：止めて onend で作り直させる
+    const old = rec.active;
+    try { old && old.stop(); } catch(e){}
+    scheduleRotate();
+    return;
+  }
+  const sb = makeRecognizer();
+  rec.standby = sb;
+  try { sb.start(); }
+  catch(e){                       // 同時起動が不可 → 逐次方式へ降格
+    rec.standby = null; sb._retired = true; rec.overlap = false;
+    updateHealth(); rotate(); return;
+  }
+  clearTimeout(rec.overlapTimer);
+  rec.overlapTimer = setTimeout(promote, OVERLAP_MS);
+}
+
+function promote(){
+  clearTimeout(rec.overlapTimer);
+  const sb = rec.standby;
+  if (!sb) return;
+  rec.standby = null;
+  const old = rec.active;
+  rec.active = sb;
+  if (old && old !== sb){
+    old._retired = true;
+    try { old.stop(); } catch(e){}   // 保留中の確定結果は pushSegment 側で重複排除
+  }
+  rec.rotations++;
+  updateHealth();
+  scheduleRotate();
+}
+
+function stopAllRecognizers(){
+  clearTimeout(rec.rotTimer); clearTimeout(rec.overlapTimer);
+  [rec.active, rec.standby].forEach(a => {
+    if (!a) return;
+    a._retired = true;
+    try { a.stop(); } catch(e){}
+  });
+  rec.active = null; rec.standby = null;
 }
 
 function showRecError(msg){
@@ -629,7 +840,7 @@ async function startAudioCapture(){
     mr.start();
     rec.media = mr;
     const mt = (mr.mimeType || '').toLowerCase();
-    rec.audioExt = mt.includes('mp4') ? 'm4a' : mt.includes('ogg') ? 'ogg' : 'webm';
+    rec.audioExt = mt.indexOf('mp4') >= 0 ? 'm4a' : mt.indexOf('ogg') >= 0 ? 'ogg' : 'webm';
   } catch(e){
     rec.media = null;
     toast('音声ファイルの保存は使えませんでした');
@@ -652,20 +863,19 @@ function stopAudioCapture(){
 
 async function startRecording(){
   if (rec.running) return;
-  const Ctor = speechCtor();
-  if (!Ctor){ showRecError('このブラウザは音声認識に対応していません。iPhone は Safari、Android は Chrome でお試しください。'); return; }
+  if (!speechCtor()){ showRecError('このブラウザは音声認識に対応していません。iPhone は Safari、Android は Chrome でお試しください。'); return; }
 
   $('#supportAlert').classList.add('hide');
   rec.lang = $('#recogLang').value;
-  rec.segments = []; rec.interim = ''; rec.restarts = [];
+  rec.segments = []; rec.interim = ''; rec.restarts = []; rec.rotations = 0;
+  rec.overlap = settings.overlap !== false;
   rec.elapsed = 0; rec.startedAt = Date.now();
   rec.running = true; rec.paused = false;
-  if (rec.audioUrl){ URL.revokeObjectURL(rec.audioUrl); rec.audioUrl = null; }
 
-  try { startRecognition(); }
+  try { startActive(); }
   catch(e){ rec.running = false; showRecError('音声認識を開始できませんでした：' + e.message); return; }
 
-  updateRecUI(); renderLive();
+  updateRecUI(); renderLive(); updateHealth();
   rec.timerId = setInterval(tick, 250); tick();
   acquireWakeLock();
   if ($('#saveAudio').checked) startAudioCapture();
@@ -675,16 +885,16 @@ function pauseRecording(){
   if (!rec.running || rec.paused) return;
   rec.paused = true;
   rec.elapsed += Date.now() - rec.startedAt;
-  try { rec.api && rec.api.stop(); } catch(e){}
+  stopAllRecognizers();
   try { rec.media && rec.media.state === 'recording' && rec.media.pause(); } catch(e){}
-  updateRecUI(); tick();
+  updateRecUI(); updateHealth(); tick();
 }
 function resumeRecording(){
   if (!rec.running || !rec.paused) return;
   rec.paused = false; rec.startedAt = Date.now(); rec.restarts = [];
-  try { startRecognition(); } catch(e){ showRecError('再開できませんでした：' + e.message); }
+  try { startActive(); } catch(e){ showRecError('再開できませんでした：' + e.message); }
   try { rec.media && rec.media.state === 'paused' && rec.media.resume(); } catch(e){}
-  updateRecUI();
+  updateRecUI(); updateHealth();
 }
 
 async function stopRecording(save){
@@ -692,32 +902,31 @@ async function stopRecording(save){
   if (!rec.paused) rec.elapsed += Date.now() - rec.startedAt;
   rec.running = false; rec.paused = false;
   clearInterval(rec.timerId); rec.timerId = null;
-  const api = rec.api; rec.api = null;
-  try { api && (api.onend = null, api.stop()); } catch(e){}
+  stopAllRecognizers();
   releaseWakeLock();
 
   const blob = await stopAudioCapture();
   const transcript = joinSegments().trim();
   rec.interim = '';
-  updateRecUI(); renderLive();
+  updateRecUI(); renderLive(); updateHealth();
 
   if (!save) return;
-  if (!transcript){ toast('文字起こしが空のため保存しませんでした'); return; }
+  if (!transcript && !blob){ toast('文字起こしが空のため保存しませんでした'); return; }
 
   const title = ($('#recTitle').value || '').trim() || `メモ ${fmtDate(Date.now())}`;
   const r = {
     id: uid(), createdAt: Date.now(), title,
     lang: rec.lang, durationMs: rec.elapsed,
-    transcript, results: [],
+    transcript, results: [], hasAudio: !!blob,
   };
-  records.unshift(r); saveRecords();
+  records.unshift(r);
+  try { await persistAll(); } catch(e){ toast('保存に失敗しました：' + e.message); }
 
   if (blob){
-    if (rec.audioUrl) URL.revokeObjectURL(rec.audioUrl);
-    rec.audioUrl = URL.createObjectURL(blob);
-    rec.audioName = `${title}.${rec.audioExt}`;
-    rec.audioForId = r.id;
+    try { await idbPut('audio', { id:r.id, blob, name:`${title}.${rec.audioExt}`, mime:blob.type }); }
+    catch(e){ r.hasAudio = false; saveRecords(); toast('音声の保存に失敗しました（容量不足の可能性）'); }
   }
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
 
   $('#recTitle').value = '';
   rec.elapsed = 0; $('#timer').textContent = '00:00';
@@ -754,11 +963,21 @@ function setView(v){
   window.scrollTo(0,0);
 }
 
+function matches(r, q){
+  if (!q) return true;
+  const hay = [r.title, r.transcript].concat((r.results||[]).map(x => x.label + ' ' + x.text)).join('\n').toLowerCase();
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every(w => hay.indexOf(w) >= 0);
+}
+
 function renderList(){
   const box = $('#listBox');
-  $('#listCount').textContent = records.length ? records.length + ' 件' : '';
+  const shown = records.filter(r => matches(r, searchQ));
+  $('#listCount').textContent = searchQ
+    ? `${shown.length} / ${records.length} 件`
+    : (records.length ? records.length + ' 件' : '');
   if (!records.length){ box.innerHTML = '<div class="empty">まだメモがありません。<br>「録音」タブから始めましょう。</div>'; return; }
-  box.innerHTML = records.map(r => `
+  if (!shown.length){ box.innerHTML = '<div class="empty">一致するメモがありません。</div>'; return; }
+  box.innerHTML = shown.map(r => `
     <div class="item" data-id="${r.id}">
       <div class="t">${esc(r.title)}</div>
       <div class="m">
@@ -766,6 +985,7 @@ function renderList(){
         <span>${fmtTime(r.durationMs || 0)}</span>
         <span>${(r.transcript || '').length.toLocaleString()} 文字</span>
         ${(r.results && r.results.length) ? `<span class="badge">${r.results.length} 結果</span>` : ''}
+        ${r.hasAudio ? '<span class="badge au">音声</span>' : ''}
       </div>
       <div class="p">${esc((r.transcript || '').slice(0,120))}</div>
     </div>`).join('');
@@ -780,33 +1000,53 @@ function openDetail(id){
   $('#dText').value  = r.transcript;
   $('#dMeta').textContent = `${fmtDate(r.createdAt)}・${fmtTime(r.durationMs || 0)}`;
   $('#aiStatus').textContent = '';
+  $('#aiBar').classList.add('hide');
   $('#freeInput').value = '';
-  updateCount(); renderResults(); refreshKeyAlerts();
+  $('#streamBox').classList.add('hide');
+  updateCount(); renderResults(); refreshKeyAlerts(); renderAudio();
   setView('detail');
 }
 
 function updateCount(){ $('#dCount').textContent = $('#dText').value.length.toLocaleString() + ' 文字'; }
+
+async function renderAudio(){
+  const el = $('#audioBox');
+  if (audioObjUrl){ URL.revokeObjectURL(audioObjUrl); audioObjUrl = null; }
+  const r = getRecord(currentId);
+  if (!r || !r.hasAudio){ el.classList.add('hide'); el.innerHTML = ''; return; }
+  let a = null;
+  try { a = await idbGet('audio', currentId); } catch(e){}
+  if (!a || !a.blob){ el.classList.add('hide'); el.innerHTML = ''; return; }
+  audioObjUrl = URL.createObjectURL(a.blob);
+  el.classList.remove('hide');
+  el.innerHTML =
+    `<label>録音した音声（${fmtBytes(a.blob.size)}）</label>
+     <audio controls preload="metadata" src="${audioObjUrl}"></audio>
+     <div class="btnrow" style="margin-top:8px">
+       <a class="btn sec sm" href="${audioObjUrl}" download="${esc(a.name || 'recording')}">ダウンロード</a>
+       <button class="btn danger sm" id="delAudioBtn">音声だけ削除</button>
+     </div>`;
+  const db2 = $('#delAudioBtn');
+  if (db2) db2.addEventListener('click', async () => {
+    if (!confirm('録音した音声を削除します。文字起こしは残ります。よろしいですか？')) return;
+    try { await idbDel('audio', currentId); } catch(e){}
+    const rr = getRecord(currentId); if (rr){ rr.hasAudio = false; saveRecords(); }
+    renderAudio(); toast('音声を削除しました');
+  });
+}
 
 function renderResults(){
   const r = getRecord(currentId);
   const box = $('#resBox');
   const list = (r && r.results) || [];
   $('#resCount').textContent = list.length ? list.length + ' 件' : '';
+  if (!list.length){ box.innerHTML = '<div class="empty">まだ結果がありません。上のボタンから実行してください。</div>'; return; }
 
-  let audioHtml = '';
-  if (rec.audioUrl && rec.audioForId === currentId){
-    audioHtml = `<div class="alert ok" style="margin-bottom:10px">
-      録音した音声ファイルが使えます（アプリを閉じると消えます）。
-      <a href="${rec.audioUrl}" download="${esc(rec.audioName || 'recording')}" style="color:var(--accent);font-weight:700">音声をダウンロード</a>
-    </div>`;
-  }
-  if (!list.length){ box.innerHTML = audioHtml + '<div class="empty">まだ結果がありません。上のボタンから実行してください。</div>'; return; }
-
-  box.innerHTML = audioHtml + list.map(x => `
+  box.innerHTML = list.map(x => `
     <div class="res" data-rid="${x.id}">
       <div class="rh">
         <span class="name">${esc(x.label)}</span>
-        <span class="meta">${esc(x.model)}・${fmtDate(x.createdAt)}</span>
+        <span class="meta">${esc(x.model)}${x.parts > 1 ? '・' + x.parts + '分割' : ''}・${fmtDate(x.createdAt)}</span>
       </div>
       <div class="body">${mdToHtml(x.text)}</div>
       <div class="btnrow" style="margin-top:10px">
@@ -834,18 +1074,36 @@ function renderResults(){
 }
 
 /* ============================================================
-   AI 実行
+   AI 実行（長文は自動分割 + ストリーミング表示）
 ============================================================ */
 let busy = false;
+
+function streamStart(label){
+  $('#streamBox').classList.remove('hide');
+  $('#streamName').textContent = label;
+  $('#streamMeta').textContent = modelInfo(settings.model).id.replace('claude-','');
+  $('#streamBody').innerHTML = '<span class="caret"></span>';
+}
+function streamSet(text){
+  $('#streamBody').innerHTML = esc(text) + '<span class="caret"></span>';
+}
+function streamEnd(){ $('#streamBox').classList.add('hide'); $('#streamBody').textContent = ''; }
+
+function progress(done, total, note){
+  const bar = $('#aiBar');
+  if (total <= 1){ bar.classList.add('hide'); return; }
+  bar.classList.remove('hide');
+  bar.querySelector('i').style.width = Math.round(done / total * 100) + '%';
+  $('#aiStatus').innerHTML = `<span class="spin"></span>${esc(note)}（${done}/${total}）`;
+}
+
 async function runAction(act){
   if (busy) return;
   const r = getRecord(currentId);
   if (!r) return;
 
-  // 編集中の本文を先に反映
   const cur = $('#dText').value.trim();
   if (cur !== r.transcript){ r.transcript = cur; saveRecords(); }
-
   if (!r.transcript){ toast('文字起こしが空です'); return; }
   if (!settings.apiKey){ toast('設定タブで API キーを登録してください'); setView('settings'); return; }
 
@@ -855,28 +1113,93 @@ async function runAction(act){
     if (!free){ toast('指示を入力してください'); return; }
   }
 
-  const p = buildPrompt(act, r, free);
   const label = act === 'translate' ? `翻訳（${settings.transLang}）`
               : act === 'free'      ? `自由指示：${free.slice(0,24)}${free.length>24?'…':''}`
               : ACT_LABEL[act];
 
   busy = true;
+  aborter = new AbortController();
+  const sig = aborter.signal;
   $$('#v-detail [data-act]').forEach(b => b.disabled = true);
-  $('#aiStatus').innerHTML = `<span class="spin"></span>${esc(label)}を実行中…（長い文章では1分ほどかかります）`;
+  $('#abortBtn').classList.remove('hide');
+  $('#aiStatus').innerHTML = `<span class="spin"></span>${esc(label)}を準備中…`;
+
+  const chunks = splitText(r.transcript, CHUNK_CHARS);
+  let text = '', truncated = false;
 
   try {
-    const { text, truncated } = await callClaude(p.system, p.user, p.effort);
+    if (act === 'clean' || act === 'translate'){
+      // 分割して順に処理し、つなげる
+      const sys = act === 'clean' ? SYS.clean(langName(r.lang)) : SYS.translate(settings.transLang);
+      const parts = [];
+      streamStart(label);
+      for (let i = 0; i < chunks.length; i++){
+        if (sig.aborted) throw new DOMException('aborted','AbortError');
+        progress(i, chunks.length, `${label}を実行中`);
+        if (chunks.length === 1) $('#aiStatus').innerHTML = `<span class="spin"></span>${esc(label)}を実行中…`;
+        const head = parts.join('\n\n');
+        const out = await callClaude(
+          sys + (chunks.length > 1 ? SYS.chunkNote : ''),
+          chunks[i],
+          { effort: act === 'clean' ? 'low' : 'low', signal: sig, maxTokens: 32000,
+            onDelta: (_d, acc) => streamSet(head ? head + '\n\n' + acc : acc) }
+        );
+        parts.push(out.text); truncated = truncated || out.truncated;
+      }
+      text = parts.join('\n\n');
+    } else {
+      // summary / free：長ければ「抽出 → 統合」の2段階
+      if (chunks.length === 1){
+        streamStart(label);
+        $('#aiStatus').innerHTML = `<span class="spin"></span>${esc(label)}を実行中…`;
+        const out = await callClaude(
+          act === 'summary' ? SYS.summary : SYS.free,
+          act === 'summary' ? r.transcript : `【指示】\n${free}\n\n【文字起こし】\n${r.transcript}`,
+          { effort:'medium', signal: sig, maxTokens: 32000, onDelta: (_d, acc) => streamSet(acc) }
+        );
+        text = out.text; truncated = out.truncated;
+      } else {
+        const notes = [];
+        for (let i = 0; i < chunks.length; i++){
+          if (sig.aborted) throw new DOMException('aborted','AbortError');
+          progress(i, chunks.length + 1, '内容を抽出中');
+          const out = await callClaude(SYS.mapNotes(act === 'free' ? free : ''), chunks[i],
+            { effort:'low', signal: sig, maxTokens: 16000 });
+          notes.push(`【パート${i+1}】\n${out.text}`);
+        }
+        progress(chunks.length, chunks.length + 1, `${label}にまとめ中`);
+        streamStart(label);
+        const merged = notes.join('\n\n');
+        const out = await callClaude(
+          act === 'summary' ? SYS.summary : SYS.free,
+          act === 'summary'
+            ? `以下は長い録音を分割して抽出したメモです。全体をひとつの要約にまとめてください。\n\n${merged}`
+            : `【指示】\n${free}\n\n【素材】以下は長い録音を分割して抽出したメモです。\n\n${merged}`,
+          { effort:'medium', signal: sig, maxTokens: 32000, onDelta: (_d, acc) => streamSet(acc) }
+        );
+        text = out.text; truncated = out.truncated;
+      }
+    }
+
     r.results.unshift({
       id: uid(), kind: act, label, text,
       model: modelInfo(settings.model).id.replace('claude-',''),
-      createdAt: Date.now(),
+      parts: chunks.length, createdAt: Date.now(),
     });
-    saveRecords(); renderResults();
-    $('#aiStatus').textContent = truncated ? '完了しました（長すぎて途中で切れた可能性があります）' : '完了しました。';
+    saveRecords(); streamEnd(); renderResults();
+    $('#aiBar').classList.add('hide');
+    $('#aiStatus').textContent = truncated
+      ? '完了しました（長すぎて途中で切れた可能性があります）'
+      : chunks.length > 1 ? `完了しました（${chunks.length}分割で処理）` : '完了しました。';
   } catch(e){
-    $('#aiStatus').innerHTML = `<span style="color:#ff8f99">${esc(e.message)}</span>`;
+    streamEnd();
+    $('#aiBar').classList.add('hide');
+    $('#aiStatus').innerHTML = e.name === 'AbortError'
+      ? '<span style="color:var(--warn)">中止しました。</span>'
+      : `<span style="color:#ff8f99">${esc(e.message)}</span>`;
   } finally {
-    busy = false;
+    busy = false; aborter = null;
+    $('#abortBtn').classList.add('hide');
     $$('#v-detail [data-act]').forEach(b => b.disabled = false);
   }
 }
@@ -890,17 +1213,29 @@ function fillSelect(el, items, val){
     return `<option value="${esc(v)}"${v===val?' selected':''}>${esc(l)}</option>`;
   }).join('');
 }
-function renderSettings(){
+async function renderSettings(){
   $('#apiKey').value = settings.apiKey || '';
   fillSelect($('#setRecogLang'), RECOG_LANGS, settings.recogLang);
   fillSelect($('#setTransLang'), TRANS_LANGS, settings.transLang);
   fillSelect($('#setModel'), MODELS.map(m => [m.id, m.label]), settings.model);
   $('#setAutoClean').checked = !!settings.autoClean;
+  $('#setOverlap').checked = settings.overlap !== false;
   $('#modelNote').textContent = modelInfo(settings.model).effort
     ? '長い会議の要約もこなせます。料金はモデルと文字数に応じた従量課金です。'
     : '最も安価で高速ですが、要約の質は上位モデルに劣ります。';
-  const bytes = (localStorage.getItem(LS_REC) || '').length;
-  $('#storeInfo').textContent = `保存件数 ${records.length} 件 / 約 ${(bytes/1024).toFixed(1)} KB`;
+
+  let info = `保存件数 ${records.length} 件`;
+  try {
+    const au = await idbAll('audio');
+    const bytes = au.reduce((n,a) => n + (a.blob ? a.blob.size : 0), 0);
+    if (au.length) info += ` / 音声 ${au.length} 件（${fmtBytes(bytes)}）`;
+    if (navigator.storage && navigator.storage.estimate){
+      const est = await navigator.storage.estimate();
+      if (est && est.usage != null) info += ` / 使用量 ${fmtBytes(est.usage)}`;
+      if (est && est.quota != null) info += ` （上限 ${fmtBytes(est.quota)}）`;
+    }
+  } catch(e){}
+  $('#storeInfo').textContent = info;
 }
 function refreshKeyAlerts(){
   const has = !!(settings.apiKey || '').trim();
@@ -909,22 +1244,44 @@ function refreshKeyAlerts(){
 }
 
 /* ============================================================
+   データ読み込み（localStorage → IndexedDB 移行）
+============================================================ */
+async function initData(){
+  try { records = await idbAll('records'); }
+  catch(e){ records = []; toast('データを開けませんでした：' + e.message); }
+
+  const legacy = localStorage.getItem(LS_REC);
+  if (legacy){
+    try {
+      const arr = JSON.parse(legacy);
+      if (Array.isArray(arr) && arr.length){
+        const have = new Set(records.map(r => r.id));
+        const add = arr.filter(r => r && r.id && !have.has(r.id));
+        if (add.length){ records = add.concat(records); await persistAll(); }
+      }
+      localStorage.removeItem(LS_REC);   // 書き込み成功後にだけ消す
+      if (Array.isArray(arr) && arr.length) toast(`${arr.length} 件を新しい保存先へ移しました`);
+    } catch(e){ /* 壊れていれば残しておく */ }
+  }
+  records.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+}
+
+/* ============================================================
    初期化・イベント
 ============================================================ */
-function init(){
+async function init(){
   fillSelect($('#recogLang'), RECOG_LANGS, settings.recogLang);
   fillSelect($('#transLang'), TRANS_LANGS, settings.transLang);
   fillSelect($('#modelSel'), MODELS.map(m => [m.id, m.label]), settings.model);
   refreshKeyAlerts();
-  updateRecUI(); renderLive();
+  updateRecUI(); renderLive(); updateHealth();
 
   if (!speechCtor()){
     showRecError('このブラウザは音声認識に対応していません。iPhone は Safari、Android は Chrome で開いてください。');
   } else if (!window.isSecureContext){
-    showRecError('このページは HTTPS で開く必要があります。ファイルを直接開くとマイクが使えません（GitHub Pages のURLから開いてください）。');
+    showRecError('このページは HTTPS で開く必要があります。ファイルを直接開くとマイクが使えません（公開URLから開いてください）。');
   }
 
-  // タブ
   $$('.tab').forEach(t => t.addEventListener('click', () => setView(t.dataset.view)));
 
   // 録音
@@ -936,6 +1293,13 @@ function init(){
   $('#stopBtn').addEventListener('click', () => stopRecording(true));
   $('#recogLang').addEventListener('change', e => { settings.recogLang = e.target.value; saveSettings(); });
 
+  // 履歴
+  let sTimer = null;
+  $('#searchBox').addEventListener('input', e => {
+    clearTimeout(sTimer);
+    sTimer = setTimeout(() => { searchQ = e.target.value.trim(); renderList(); }, 150);
+  });
+
   // 詳細
   $('#backBtn').addEventListener('click', () => setView('list'));
   $('#dText').addEventListener('input', updateCount);
@@ -946,11 +1310,16 @@ function init(){
     saveRecords(); $('#dTitle').value = r.title; toast('保存しました');
   });
   $('#copyTextBtn').addEventListener('click', () => copyText($('#dText').value));
-  $('#delBtn').addEventListener('click', () => {
+  $('#delBtn').addEventListener('click', async () => {
     if (!confirm('このメモを削除します。よろしいですか？')) return;
-    records = records.filter(r => r.id !== currentId); saveRecords(); setView('list'); toast('削除しました');
+    const id = currentId;
+    records = records.filter(r => r.id !== id);
+    saveRecords();
+    try { await idbDel('audio', id); } catch(e){}
+    setView('list'); toast('削除しました');
   });
   $$('#v-detail [data-act]').forEach(b => b.addEventListener('click', () => runAction(b.dataset.act)));
+  $('#abortBtn').addEventListener('click', () => { if (aborter) aborter.abort(); });
   $('#transLang').addEventListener('change', e => { settings.transLang = e.target.value; saveSettings(); });
   $('#modelSel').addEventListener('change', e => { settings.model = e.target.value; saveSettings(); });
 
@@ -967,7 +1336,8 @@ function init(){
     settings.apiKey = $('#apiKey').value.trim(); saveSettings(); refreshKeyAlerts();
     $('#keyStatus').innerHTML = '<span class="spin"></span>接続を確認しています…';
     try {
-      await callClaude('ひとことだけ日本語で答えてください。', 'OK とだけ返してください。', 'low');
+      // Opus 5 は既定で思考が有効。max_tokens は思考＋本文の合計なので小さくしすぎない
+      await callClaude('ひとことだけ日本語で答えてください。', 'OK とだけ返してください。', { effort:'low', maxTokens:4096 });
       $('#keyStatus').innerHTML = '<span style="color:var(--accent)">接続できました。AI機能が使えます。</span>';
     } catch(e){
       $('#keyStatus').innerHTML = `<span style="color:#ff8f99">${esc(e.message)}</span>`;
@@ -977,10 +1347,11 @@ function init(){
   $('#setTransLang').addEventListener('change', e => { settings.transLang = e.target.value; saveSettings(); $('#transLang').value = e.target.value; });
   $('#setModel').addEventListener('change', e => { settings.model = e.target.value; saveSettings(); $('#modelSel').value = e.target.value; renderSettings(); });
   $('#setAutoClean').addEventListener('change', e => { settings.autoClean = e.target.checked; saveSettings(); });
+  $('#setOverlap').addEventListener('change', e => { settings.overlap = e.target.checked; saveSettings(); });
 
   // データ
   $('#exportBtn').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify({ app:'voicememo', version:1, exportedAt:Date.now(), records }, null, 2)], { type:'application/json' });
+    const blob = new Blob([JSON.stringify({ app:'voicememo', version:2, exportedAt:Date.now(), records }, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `録音メモ_バックアップ_${new Date().toISOString().slice(0,10)}.json`;
@@ -990,28 +1361,30 @@ function init(){
   $('#importFile').addEventListener('change', e => {
     const f = e.target.files && e.target.files[0]; if (!f) return;
     const fr = new FileReader();
-    fr.onload = () => {
+    fr.onload = async () => {
       try {
         const d = JSON.parse(fr.result);
         const incoming = Array.isArray(d) ? d : (d.records || []);
         if (!Array.isArray(incoming)) throw new Error('形式が違います');
         const have = new Set(records.map(r => r.id));
-        const add = incoming.filter(r => r && r.id && !have.has(r.id));
+        const add = incoming.filter(r => r && r.id && !have.has(r.id))
+                            .map(r => Object.assign({}, r, { hasAudio:false }));  // 音声は含まれない
         records = add.concat(records);
         records.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-        saveRecords(); renderSettings(); toast(`${add.length} 件を読み込みました`);
+        await persistAll(); renderSettings(); toast(`${add.length} 件を読み込みました`);
       } catch(err){ toast('読み込めませんでした：' + err.message); }
     };
     fr.readAsText(f); e.target.value = '';
   });
-  $('#wipeBtn').addEventListener('click', () => {
-    if (!confirm('保存したメモをすべて削除します。元に戻せません。よろしいですか？')) return;
-    records = []; saveRecords(); renderSettings(); toast('削除しました');
+  $('#wipeBtn').addEventListener('click', async () => {
+    if (!confirm('保存したメモと音声をすべて削除します。元に戻せません。よろしいですか？')) return;
+    records = [];
+    try { await persistAll(); await idbClear('audio'); } catch(e){}
+    renderSettings(); toast('削除しました');
   });
 
-  // 録音中の離脱防止 / 画面復帰時のウェイクロック再取得
   window.addEventListener('beforeunload', e => {
-    if (rec.running){ e.preventDefault(); e.returnValue = ''; }
+    if (rec.running || busy){ e.preventDefault(); e.returnValue = ''; }
   });
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && rec.running && !rec.paused) acquireWakeLock();
@@ -1020,6 +1393,9 @@ function init(){
   if ('serviceWorker' in navigator){
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
   }
+
+  await initData();
+  if (view === 'list') renderList();
 }
 
 init();
