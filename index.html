@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b1014">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="録音メモ">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>録音メモ — 文字起こし・要約・翻訳</title>
+<style>
+:root{
+  --bg:#0b1014; --panel:#141b21; --panel2:#1b242c; --border:#28343e;
+  --text:#e8eef2; --muted:#8fa0ad; --accent:#2fd4a7; --accent2:#4aa3ff;
+  --rec:#ff5d6c; --warn:#ffb454;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  background-image:radial-gradient(900px 420px at 85% -140px, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
+  color:var(--text);
+  font-family:"Segoe UI","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+  line-height:1.6; min-height:100vh; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:820px;margin:0 auto;padding:20px 16px 80px}
+@supports (padding: max(0px)){
+  .wrap{padding:calc(16px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(80px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left))}
+}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+header h1{font-size:19px;margin:0;letter-spacing:.02em;display:flex;align-items:center;gap:9px}
+header h1 .lg{width:9px;height:20px;border-radius:3px;background:linear-gradient(180deg,var(--accent),var(--accent2))}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;text-align:center;padding:10px 6px;border-radius:11px;border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;font-weight:700;font-size:14px;font-family:inherit;touch-action:manipulation;user-select:none}
+.tab.active{background:color-mix(in srgb, var(--accent) 20%, var(--panel));border-color:var(--accent);color:#fff}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:9px}
+.card h2::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--accent);flex:none}
+.card h2 .rt{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
+label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;font-weight:600}
+input[type=text],input[type=password],textarea,select{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:16px;font-family:inherit}
+textarea{resize:vertical;line-height:1.7}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1;min-width:150px}
+.btn{border:none;border-radius:11px;padding:11px 16px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;background:var(--accent);color:#062018}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.sec{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.btn.blue{background:var(--accent2);color:#04182e}
+.btn.danger{background:transparent;border:1px solid rgba(255,93,108,.5);color:#ff8f99}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:9px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.alert{border-radius:11px;padding:11px 14px;font-size:13px;margin-bottom:12px;border:1px solid}
+.alert.err{background:rgba(255,93,108,.10);border-color:rgba(255,93,108,.4);color:#ffb6bd}
+.alert.warn{background:rgba(255,180,84,.10);border-color:rgba(255,180,84,.38);color:#ffd9a3}
+.alert.ok{background:rgba(47,212,167,.10);border-color:rgba(47,212,167,.38);color:#a9f0dc}
+/* 録音ボタン */
+.recwrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:6px 0 2px}
+.recbtn{width:132px;height:132px;border-radius:50%;border:none;cursor:pointer;font-family:inherit;
+  background:linear-gradient(180deg,#3ae2b4,#1aa583);color:#052018;font-size:16px;font-weight:800;letter-spacing:.06em;
+  box-shadow:0 8px 30px rgba(47,212,167,.25);touch-action:manipulation;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .08s}
+.recbtn:active{transform:scale(.97)}
+.recbtn.on{background:linear-gradient(180deg,#ff7280,#e0434f);color:#26080c;box-shadow:0 8px 30px rgba(255,93,108,.3);animation:pulse 1.8s ease-in-out infinite}
+.recbtn.pause{background:linear-gradient(180deg,#ffc46b,#e39421);color:#2a1a02;animation:none}
+.recbtn .ico{font-size:30px;line-height:1}
+@keyframes pulse{0%,100%{box-shadow:0 8px 30px rgba(255,93,108,.28)}50%{box-shadow:0 8px 42px rgba(255,93,108,.55)}}
+.timer{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.timer.idle{color:var(--muted)}
+.live{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:13px;min-height:120px;max-height:44vh;overflow-y:auto;-webkit-overflow-scrolling:touch;white-space:pre-wrap;word-break:break-word;font-size:15.5px;line-height:1.75}
+.live .interim{color:var(--muted)}
+.live .ph{color:var(--muted);font-size:13.5px}
+/* 一覧 */
+.item{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;touch-action:manipulation}
+.item:active{border-color:var(--accent)}
+.item .t{font-weight:700;font-size:14.5px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .m{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.item .p{font-size:12.5px;color:var(--muted);margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.empty{color:var(--muted);font-size:13.5px;text-align:center;padding:26px 10px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--accent2) 22%,transparent);color:#a8d5ff;border:1px solid rgba(74,163,255,.35)}
+/* 結果 */
+.res{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.res .rh{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.res .rh .name{font-weight:800;font-size:13.5px}
+.res .rh .meta{font-size:11.5px;color:var(--muted);margin-left:auto}
+.body{font-size:15px;line-height:1.8;word-break:break-word}
+.body h3{font-size:14.5px;margin:16px 0 6px;color:var(--accent)}
+.body h3:first-child{margin-top:0}
+.body ul{margin:6px 0;padding-left:1.25em}
+.body li{margin:3px 0}
+.body p{margin:8px 0}
+.body strong{color:#fff}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.hide{display:none!important}
+.sw{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--text);cursor:pointer;user-select:none}
+.sw input{width:auto;margin:0;transform:scale(1.25)}
+.kv{font-size:12.5px;color:var(--muted);margin-top:4px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom));background:#0f1a20;border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:11px;font-size:13.5px;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1><span class="lg"></span>録音メモ</h1>
+  <span id="hdrState" class="badge hide">録音中</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-view="record">録音</div>
+  <div class="tab" data-view="list">履歴</div>
+  <div class="tab" data-view="settings">設定</div>
+</div>
+
+<!-- ============ 録音 ============ -->
+<section id="v-record">
+  <div id="supportAlert" class="alert err hide"></div>
+  <div id="keyAlert" class="alert warn hide">
+    AI機能（整形・要約・翻訳）を使うには「設定」タブで Claude の API キーを登録してください。文字起こしだけなら不要です。
+  </div>
+
+  <div class="card">
+    <div class="recwrap">
+      <button id="recBtn" class="recbtn"><span class="ico">●</span><span id="recLabel">録音開始</span></button>
+      <div id="timer" class="timer idle">00:00</div>
+      <div class="btnrow" id="recCtl" style="justify-content:center">
+        <button class="btn blue sm hide" id="stopBtn">停止して保存</button>
+      </div>
+    </div>
+    <p class="note" id="recHint">マイクの使用を許可してください。録音中は画面を消したり他のアプリに切り替えると認識が止まります。</p>
+  </div>
+
+  <div class="card">
+    <h2>文字起こし<span class="rt" id="liveCount">0 文字</span></h2>
+    <div class="live" id="liveBox"><span class="ph">ここに認識結果がリアルタイムで表示されます。</span></div>
+  </div>
+
+  <div class="card">
+    <h2>録音の設定</h2>
+    <div class="row">
+      <div>
+        <label>話す言語</label>
+        <select id="recogLang"></select>
+      </div>
+      <div>
+        <label>タイトル（任意）</label>
+        <input type="text" id="recTitle" placeholder="例）打ち合わせメモ">
+      </div>
+    </div>
+    <label class="sw" style="margin-top:12px"><input type="checkbox" id="saveAudio">音声ファイルも保存する（実験的・iPhoneでは認識が不安定になる場合あり）</label>
+  </div>
+</section>
+
+<!-- ============ 履歴 ============ -->
+<section id="v-list" class="hide">
+  <div class="card">
+    <h2>保存したメモ<span class="rt" id="listCount"></span></h2>
+    <div id="listBox"></div>
+  </div>
+</section>
+
+<!-- ============ 詳細 ============ -->
+<section id="v-detail" class="hide">
+  <div class="btnrow" style="margin-bottom:12px">
+    <button class="btn sec sm" id="backBtn">← 一覧へ</button>
+    <button class="btn danger sm" id="delBtn" style="margin-left:auto">このメモを削除</button>
+  </div>
+
+  <div class="card">
+    <h2>メモ<span class="rt" id="dMeta"></span></h2>
+    <label>タイトル</label>
+    <input type="text" id="dTitle" placeholder="タイトル">
+    <label style="margin-top:12px">文字起こし（自由に修正できます）</label>
+    <textarea id="dText" rows="10" placeholder="文字起こし"></textarea>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn sec sm" id="saveTextBtn">保存</button>
+      <button class="btn sec sm" id="copyTextBtn">コピー</button>
+      <span class="kv" id="dCount" style="margin-left:auto;align-self:center"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>AIで処理する</h2>
+    <div id="aiKeyAlert" class="alert warn hide" style="margin-bottom:12px">「設定」タブで API キーを登録すると使えます。</div>
+    <div class="btnrow">
+      <button class="btn sec" data-act="clean">文字起こしを整える</button>
+      <button class="btn" data-act="summary">要約する</button>
+      <button class="btn blue" data-act="translate">翻訳する</button>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label>翻訳先の言語</label>
+        <select id="transLang"></select>
+      </div>
+      <div>
+        <label>使うモデル</label>
+        <select id="modelSel"></select>
+      </div>
+    </div>
+    <label style="margin-top:12px">自由な指示（任意）</label>
+    <textarea id="freeInput" rows="2" placeholder="例）議事録の形式にまとめて / ToDoだけ箇条書きで抜き出して"></textarea>
+    <div class="btnrow" style="margin-top:8px">
+      <button class="btn sec sm" data-act="free">この指示で実行</button>
+    </div>
+    <div id="aiStatus" class="note"></div>
+  </div>
+
+  <div class="card">
+    <h2>結果<span class="rt" id="resCount"></span></h2>
+    <div id="resBox"></div>
+  </div>
+</section>
+
+<!-- ============ 設定 ============ -->
+<section id="v-settings" class="hide">
+  <div class="card">
+    <h2>Claude API キー</h2>
+    <label>API キー（sk-ant-… ）</label>
+    <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
+    <p class="note">
+      キーはこの端末のブラウザ内だけに保存され、送信先は Anthropic のみです。共有端末では登録しないでください。<br>
+      取得先：<span style="color:var(--accent2)">console.anthropic.com</span> → API Keys（従量課金）
+    </p>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn sm" id="saveKeyBtn">保存</button>
+      <button class="btn sec sm" id="testKeyBtn">接続テスト</button>
+      <button class="btn danger sm" id="clearKeyBtn">キーを削除</button>
+    </div>
+    <div id="keyStatus" class="note"></div>
+  </div>
+
+  <div class="card">
+    <h2>既定の設定</h2>
+    <div class="row">
+      <div>
+        <label>話す言語（既定）</label>
+        <select id="setRecogLang"></select>
+      </div>
+      <div>
+        <label>翻訳先の言語（既定）</label>
+        <select id="setTransLang"></select>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label>使うモデル（既定）</label>
+      <select id="setModel"></select>
+      <p class="note" id="modelNote"></p>
+    </div>
+    <label class="sw" style="margin-top:12px"><input type="checkbox" id="setAutoClean">録音を停止したら自動で「文字起こしを整える」を実行する</label>
+  </div>
+
+  <div class="card">
+    <h2>データ</h2>
+    <div class="btnrow">
+      <button class="btn sec sm" id="exportBtn">バックアップを書き出す</button>
+      <button class="btn sec sm" id="importBtn">読み込む</button>
+      <button class="btn danger sm" id="wipeBtn">全データ削除</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json,.json" class="hide">
+    <p class="note" id="storeInfo"></p>
+  </div>
+
+  <div class="card">
+    <h2>使い方・注意</h2>
+    <p class="note" style="margin-top:0">
+      ・文字起こしはブラウザ内蔵の音声認識を使うため <b>無料</b> ですが、精度は中程度です。ネット接続が必要です。<br>
+      ・iPhone では <b>Safari</b> で開き、画面を点けたまま録音してください（画面ロック・アプリ切替で停止します）。<br>
+      ・長い会議は数分ごとに区切って録音すると取りこぼしが減ります。<br>
+      ・整形／要約／翻訳は Claude API を使うため <b>従量課金</b> です（数十分の会議で数円〜数十円程度）。<br>
+      ・データはこの端末のブラウザ内にのみ保存されます。機種変更前にバックアップを書き出してください。
+    </p>
+  </div>
+</section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   定数
+============================================================ */
+const LS_REC = 'voicememo-records-v1';
+const LS_SET = 'voicememo-settings-v1';
+
+const RECOG_LANGS = [
+  ['ja-JP','日本語'], ['en-US','English (US)'], ['en-GB','English (UK)'],
+  ['zh-CN','中文（简体）'], ['zh-TW','中文（繁體）'], ['ko-KR','한국어'],
+  ['es-ES','Español'], ['fr-FR','Français'], ['de-DE','Deutsch'],
+  ['it-IT','Italiano'], ['pt-BR','Português (BR)'], ['ru-RU','Русский'],
+  ['th-TH','ไทย'], ['vi-VN','Tiếng Việt'], ['id-ID','Bahasa Indonesia'], ['hi-IN','हिन्दी'],
+];
+const TRANS_LANGS = [
+  '英語','日本語','中国語（簡体字）','中国語（繁体字）','韓国語','スペイン語',
+  'フランス語','ドイツ語','イタリア語','ポルトガル語','ロシア語','タイ語','ベトナム語','インドネシア語',
+];
+// CJK 系は単語間スペースを入れない
+const NO_SPACE = ['ja','zh','ko','th'];
+
+const MODELS = [
+  { id:'claude-opus-5',    label:'Claude Opus 5（最高精度・やや高価）', effort:true  },
+  { id:'claude-sonnet-5',  label:'Claude Sonnet 5（バランス）',          effort:true  },
+  { id:'claude-haiku-4-5', label:'Claude Haiku 4.5（速い・安い）',       effort:false },
+];
+
+const ACT_LABEL = { clean:'整形', summary:'要約', translate:'翻訳', free:'自由指示' };
+
+/* ============================================================
+   状態
+============================================================ */
+let settings = loadSettings();
+let records  = loadRecords();
+let view = 'record';
+let currentId = null;
+
+const rec = {
+  api:null, running:false, paused:false,
+  segments:[], interim:'',
+  startedAt:0, elapsed:0, timerId:null,
+  restarts:[], wakeLock:null,
+  media:null, chunks:[], stream:null, audioUrl:null, audioExt:'m4a',
+};
+
+/* ============================================================
+   ユーティリティ
+============================================================ */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function toast(msg){
+  const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(()=>el.classList.remove('show'), 2200);
+}
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+function fmtTime(ms){
+  const s = Math.floor(ms/1000), h = Math.floor(s/3600), m = Math.floor(s%3600/60), ss = s%60;
+  const p = n => String(n).padStart(2,'0');
+  return h > 0 ? `${h}:${p(m)}:${p(ss)}` : `${p(m)}:${p(ss)}`;
+}
+function fmtDate(ts){
+  const d = new Date(ts), p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function loadSettings(){
+  let s = {};
+  try { s = JSON.parse(localStorage.getItem(LS_SET) || '{}') || {}; } catch(e){}
+  return Object.assign({
+    apiKey:'', model:'claude-opus-5', recogLang:'ja-JP', transLang:'英語', autoClean:false
+  }, s);
+}
+function saveSettings(){ try{ localStorage.setItem(LS_SET, JSON.stringify(settings)); }catch(e){ toast('設定の保存に失敗しました'); } }
+
+function loadRecords(){
+  try { const a = JSON.parse(localStorage.getItem(LS_REC) || '[]'); return Array.isArray(a) ? a : []; }
+  catch(e){ return []; }
+}
+function saveRecords(){
+  try { localStorage.setItem(LS_REC, JSON.stringify(records)); }
+  catch(e){ toast('保存に失敗しました（容量不足の可能性）'); }
+}
+function getRecord(id){ return records.find(r => r.id === id) || null; }
+
+/* かんたん Markdown 描画（見出し・箇条書き・太字のみ） */
+function mdToHtml(src){
+  const lines = String(src).replace(/\r/g,'').split('\n');
+  const out = []; let ul = false, para = [];
+  const inline = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  const flushP = () => { if(para.length){ out.push('<p>' + para.map(inline).join('<br>') + '</p>'); para = []; } };
+  const closeUl = () => { if(ul){ out.push('</ul>'); ul = false; } };
+  for (const raw of lines){
+    const line = raw.replace(/\s+$/,'');
+    if (!line.trim()){ flushP(); closeUl(); continue; }
+    const h = /^(#{1,4})\s+(.+)$/.exec(line);
+    const li = /^\s*(?:[-*・]|\d+[.)])\s+(.+)$/.exec(line);
+    if (h){ flushP(); closeUl(); out.push('<h3>' + inline(h[2]) + '</h3>'); continue; }
+    if (li){ flushP(); if(!ul){ out.push('<ul>'); ul = true; } out.push('<li>' + inline(li[1]) + '</li>'); continue; }
+    closeUl(); para.push(line);
+  }
+  flushP(); closeUl();
+  return out.join('') || '<p class="ph">（空）</p>';
+}
+
+async function copyText(t){
+  try { await navigator.clipboard.writeText(t); toast('コピーしました'); }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('コピーしました'); }catch(_){ toast('コピーできませんでした'); }
+    document.body.removeChild(ta);
+  }
+}
+
+/* ============================================================
+   Claude API
+============================================================ */
+function modelInfo(id){ return MODELS.find(m => m.id === id) || MODELS[0]; }
+
+async function callClaude(systemPrompt, userText, effort){
+  const key = (settings.apiKey || '').trim();
+  if (!key) throw new Error('API キーが未設定です。');
+
+  const info = modelInfo(settings.model);
+  const body = {
+    model: info.id,
+    max_tokens: 16000,
+    system: systemPrompt,
+    messages: [{ role:'user', content: userText }],
+  };
+  // effort は Opus 5 / Sonnet 5 のみ対応（Haiku 4.5 は非対応）
+  if (info.effort) body.output_config = { effort: effort || 'medium' };
+
+  let res;
+  try {
+    res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch(e){
+    throw new Error('通信できませんでした。ネット接続を確認してください。');
+  }
+
+  if (!res.ok){
+    let msg = `エラー ${res.status}`;
+    try { const j = await res.json(); if (j && j.error && j.error.message) msg += '：' + j.error.message; } catch(e){}
+    if (res.status === 401) msg = 'API キーが正しくないようです（401）。';
+    if (res.status === 429) msg = 'リクエストが多すぎます。少し待って再実行してください（429）。';
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
+  if (data.stop_reason === 'refusal'){
+    throw new Error('この内容には回答できないと判断されました。');
+  }
+  const text = (data.content || [])
+    .filter(b => b.type === 'text').map(b => b.text).join('').trim();
+  if (!text) throw new Error('応答が空でした。もう一度お試しください。');
+  return { text, truncated: data.stop_reason === 'max_tokens' };
+}
+
+/* プロンプト */
+function buildPrompt(act, r, free){
+  const langName = (RECOG_LANGS.find(l => l[0] === r.lang) || ['','日本語'])[1];
+  if (act === 'clean'){
+    return {
+      effort: 'low',
+      system:
+`あなたは音声認識の文字起こしを整える編集者です。入力は${langName}の会話を音声認識したもので、句読点・改行がなく、言い間違いや誤認識が含まれます。
+
+次のルールで整えてください。
+- 句読点と改行・段落を補い、読みやすくする
+- 「えーと」「あのー」などのつなぎ言葉、意味のない繰り返しを削る
+- 明らかな誤認識は文脈から自然な語に直す（確信が持てない箇所は [?] を付けて残す）
+- 話者が複数いると読み取れる場合のみ「A:」「B:」のように話者を分ける
+- 内容の追加・要約・意訳はしない。元の発言の意味を変えない
+- 元のテキストの言語のまま出力する
+
+整えた本文だけを出力してください。前置き・後書き・説明は書かないでください。`,
+      user: r.transcript,
+    };
+  }
+  if (act === 'summary'){
+    return {
+      effort: 'medium',
+      system:
+`あなたは会議や打ち合わせの記録をまとめる担当者です。渡された文字起こしを日本語で要約してください。
+
+次の見出し構成で出力します。該当する内容がない見出しは「特になし」と書いてください。
+
+## 概要
+3行以内で全体を説明する。
+
+## 要点
+重要な論点を箇条書きにする。
+
+## 決定事項
+決まったことを箇条書きにする。
+
+## ToDo
+「誰が・何を・いつまでに」がわかる形で箇条書きにする。担当や期限が不明なものは（担当未定）（期限未定）と書く。
+
+## 未解決・確認事項
+持ち越しになった論点を箇条書きにする。
+
+文字起こしに書かれていないことを推測で補ってはいけません。聞き取れていない箇所は無理に解釈しないでください。要約本文だけを出力し、前置きは書かないでください。`,
+      user: r.transcript,
+    };
+  }
+  if (act === 'translate'){
+    const target = settings.transLang;
+    return {
+      effort: 'low',
+      system:
+`あなたはプロの翻訳者です。渡されたテキストを${target}に翻訳してください。
+
+- 話し言葉は話し言葉として、自然な${target}にする（直訳しない）
+- 段落・箇条書き・見出しなどの構造は元のまま保つ
+- 固有名詞・数値・日付は正確に保つ
+- 意味が取れない箇所は無理に訳さず、原文をそのまま残して [?] を付ける
+
+翻訳文だけを出力してください。前置きや解説は書かないでください。`,
+      user: r.transcript,
+    };
+  }
+  // free
+  return {
+    effort: 'medium',
+    system:
+`あなたは音声メモを扱うアシスタントです。ユーザーの指示に従って、渡された文字起こしを処理してください。
+文字起こしに書かれていないことを推測で補ってはいけません。回答は日本語で、結果本文だけを出力してください（前置きは不要）。`,
+    user: `【指示】\n${free}\n\n【文字起こし】\n${r.transcript}`,
+  };
+}
+
+/* ============================================================
+   録音（Web Speech API）
+============================================================ */
+function speechCtor(){ return window.SpeechRecognition || window.webkitSpeechRecognition || null; }
+
+function joinSegments(){
+  const base = (rec.lang || settings.recogLang || 'ja-JP').slice(0,2);
+  const sep = NO_SPACE.includes(base) ? '' : ' ';
+  return rec.segments.join(sep);
+}
+
+function renderLive(){
+  const box = $('#liveBox');
+  const fin = joinSegments();
+  if (!fin && !rec.interim){
+    box.innerHTML = '<span class="ph">' + (rec.running ? '聞き取り中…話してください。' : 'ここに認識結果がリアルタイムで表示されます。') + '</span>';
+  } else {
+    box.innerHTML = esc(fin) + (rec.interim ? '<span class="interim">' + esc(rec.interim) + '</span>' : '');
+    box.scrollTop = box.scrollHeight;
+  }
+  $('#liveCount').textContent = fin.length.toLocaleString() + ' 文字';
+}
+
+function tick(){
+  const ms = rec.elapsed + (rec.paused ? 0 : Date.now() - rec.startedAt);
+  $('#timer').textContent = fmtTime(ms);
+}
+
+async function acquireWakeLock(){
+  try { if ('wakeLock' in navigator) rec.wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
+}
+function releaseWakeLock(){
+  try { if (rec.wakeLock){ rec.wakeLock.release(); rec.wakeLock = null; } } catch(e){}
+}
+
+function startRecognition(){
+  const Ctor = speechCtor();
+  const api = new Ctor();
+  api.lang = rec.lang;
+  api.continuous = true;
+  api.interimResults = true;
+  api.maxAlternatives = 1;
+
+  api.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const r = e.results[i];
+      const t = (r[0] && r[0].transcript || '').trim();
+      if (!t) continue;
+      if (r.isFinal) rec.segments.push(t);
+      else interim += t;
+    }
+    rec.interim = interim;
+    renderLive();
+  };
+
+  api.onerror = e => {
+    const code = e.error;
+    if (code === 'not-allowed' || code === 'service-not-allowed'){
+      showRecError('マイクの使用が許可されていません。ブラウザの設定でマイクを許可してから再度お試しください。');
+      stopRecording(false);
+    } else if (code === 'audio-capture'){
+      showRecError('マイクを使用できませんでした。他のアプリがマイクを使っていないか確認してください。');
+      stopRecording(false);
+    } else if (code === 'network'){
+      showRecError('音声認識サーバーに接続できません。ネット接続を確認してください。');
+    }
+    // no-speech / aborted は onend の自動再開に任せる
+  };
+
+  api.onend = () => {
+    if (!rec.running || rec.paused) return;
+    // 暴走ループ防止：10秒間に20回以上の再開で停止
+    const now = Date.now();
+    rec.restarts = rec.restarts.filter(t => now - t < 10000);
+    rec.restarts.push(now);
+    if (rec.restarts.length > 20){
+      showRecError('音声認識が繰り返し停止しました。いったん録音を停止します。');
+      stopRecording(true);
+      return;
+    }
+    try { api.start(); } catch(e){ /* 既に開始済み */ }
+  };
+
+  rec.api = api;
+  api.start();
+}
+
+function showRecError(msg){
+  const el = $('#supportAlert');
+  el.textContent = msg; el.classList.remove('hide');
+}
+
+async function startAudioCapture(){
+  try {
+    rec.stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    const mr = new MediaRecorder(rec.stream);
+    rec.chunks = [];
+    mr.ondataavailable = e => { if (e.data && e.data.size) rec.chunks.push(e.data); };
+    mr.start();
+    rec.media = mr;
+    const mt = (mr.mimeType || '').toLowerCase();
+    rec.audioExt = mt.includes('mp4') ? 'm4a' : mt.includes('ogg') ? 'ogg' : 'webm';
+  } catch(e){
+    rec.media = null;
+    toast('音声ファイルの保存は使えませんでした');
+  }
+}
+function stopAudioCapture(){
+  return new Promise(resolve => {
+    if (!rec.media){ resolve(null); return; }
+    const mr = rec.media; rec.media = null;
+    mr.onstop = () => {
+      try { if (rec.stream) rec.stream.getTracks().forEach(t => t.stop()); } catch(e){}
+      rec.stream = null;
+      const blob = new Blob(rec.chunks, { type: mr.mimeType || 'audio/mp4' });
+      rec.chunks = [];
+      resolve(blob.size ? blob : null);
+    };
+    try { mr.stop(); } catch(e){ resolve(null); }
+  });
+}
+
+async function startRecording(){
+  if (rec.running) return;
+  const Ctor = speechCtor();
+  if (!Ctor){ showRecError('このブラウザは音声認識に対応していません。iPhone は Safari、Android は Chrome でお試しください。'); return; }
+
+  $('#supportAlert').classList.add('hide');
+  rec.lang = $('#recogLang').value;
+  rec.segments = []; rec.interim = ''; rec.restarts = [];
+  rec.elapsed = 0; rec.startedAt = Date.now();
+  rec.running = true; rec.paused = false;
+  if (rec.audioUrl){ URL.revokeObjectURL(rec.audioUrl); rec.audioUrl = null; }
+
+  try { startRecognition(); }
+  catch(e){ rec.running = false; showRecError('音声認識を開始できませんでした：' + e.message); return; }
+
+  updateRecUI(); renderLive();
+  rec.timerId = setInterval(tick, 250); tick();
+  acquireWakeLock();
+  if ($('#saveAudio').checked) startAudioCapture();
+}
+
+function pauseRecording(){
+  if (!rec.running || rec.paused) return;
+  rec.paused = true;
+  rec.elapsed += Date.now() - rec.startedAt;
+  try { rec.api && rec.api.stop(); } catch(e){}
+  try { rec.media && rec.media.state === 'recording' && rec.media.pause(); } catch(e){}
+  updateRecUI(); tick();
+}
+function resumeRecording(){
+  if (!rec.running || !rec.paused) return;
+  rec.paused = false; rec.startedAt = Date.now(); rec.restarts = [];
+  try { startRecognition(); } catch(e){ showRecError('再開できませんでした：' + e.message); }
+  try { rec.media && rec.media.state === 'paused' && rec.media.resume(); } catch(e){}
+  updateRecUI();
+}
+
+async function stopRecording(save){
+  if (!rec.running) return;
+  if (!rec.paused) rec.elapsed += Date.now() - rec.startedAt;
+  rec.running = false; rec.paused = false;
+  clearInterval(rec.timerId); rec.timerId = null;
+  const api = rec.api; rec.api = null;
+  try { api && (api.onend = null, api.stop()); } catch(e){}
+  releaseWakeLock();
+
+  const blob = await stopAudioCapture();
+  const transcript = joinSegments().trim();
+  rec.interim = '';
+  updateRecUI(); renderLive();
+
+  if (!save) return;
+  if (!transcript){ toast('文字起こしが空のため保存しませんでした'); return; }
+
+  const title = ($('#recTitle').value || '').trim() || `メモ ${fmtDate(Date.now())}`;
+  const r = {
+    id: uid(), createdAt: Date.now(), title,
+    lang: rec.lang, durationMs: rec.elapsed,
+    transcript, results: [],
+  };
+  records.unshift(r); saveRecords();
+
+  if (blob){
+    if (rec.audioUrl) URL.revokeObjectURL(rec.audioUrl);
+    rec.audioUrl = URL.createObjectURL(blob);
+    rec.audioName = `${title}.${rec.audioExt}`;
+    rec.audioForId = r.id;
+  }
+
+  $('#recTitle').value = '';
+  rec.elapsed = 0; $('#timer').textContent = '00:00';
+  openDetail(r.id);
+  toast('保存しました');
+
+  if (settings.autoClean && settings.apiKey) runAction('clean');
+}
+
+function updateRecUI(){
+  const btn = $('#recBtn'), lbl = $('#recLabel');
+  btn.classList.toggle('on', rec.running && !rec.paused);
+  btn.classList.toggle('pause', rec.running && rec.paused);
+  lbl.textContent = !rec.running ? '録音開始' : rec.paused ? '再開' : '一時停止';
+  btn.querySelector('.ico').textContent = !rec.running ? '●' : rec.paused ? '▶' : '❚❚';
+  $('#stopBtn').classList.toggle('hide', !rec.running);
+  $('#timer').classList.toggle('idle', !rec.running);
+  $('#hdrState').classList.toggle('hide', !rec.running);
+  $('#hdrState').textContent = rec.paused ? '一時停止中' : '録音中';
+  $('#recHint').textContent = rec.running
+    ? '画面を消したり他のアプリに切り替えると認識が止まります。終わったら「停止して保存」を押してください。'
+    : 'マイクの使用を許可してください。録音中は画面を消したり他のアプリに切り替えると認識が止まります。';
+}
+
+/* ============================================================
+   画面切り替え
+============================================================ */
+function setView(v){
+  view = v;
+  ['record','list','detail','settings'].forEach(k => $('#v-' + k).classList.toggle('hide', k !== v));
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === v || (v === 'detail' && t.dataset.view === 'list')));
+  if (v === 'list') renderList();
+  if (v === 'settings') renderSettings();
+  window.scrollTo(0,0);
+}
+
+function renderList(){
+  const box = $('#listBox');
+  $('#listCount').textContent = records.length ? records.length + ' 件' : '';
+  if (!records.length){ box.innerHTML = '<div class="empty">まだメモがありません。<br>「録音」タブから始めましょう。</div>'; return; }
+  box.innerHTML = records.map(r => `
+    <div class="item" data-id="${r.id}">
+      <div class="t">${esc(r.title)}</div>
+      <div class="m">
+        <span>${fmtDate(r.createdAt)}</span>
+        <span>${fmtTime(r.durationMs || 0)}</span>
+        <span>${(r.transcript || '').length.toLocaleString()} 文字</span>
+        ${(r.results && r.results.length) ? `<span class="badge">${r.results.length} 結果</span>` : ''}
+      </div>
+      <div class="p">${esc((r.transcript || '').slice(0,120))}</div>
+    </div>`).join('');
+  box.querySelectorAll('.item').forEach(el => el.addEventListener('click', () => openDetail(el.dataset.id)));
+}
+
+function openDetail(id){
+  currentId = id;
+  const r = getRecord(id);
+  if (!r){ setView('list'); return; }
+  $('#dTitle').value = r.title;
+  $('#dText').value  = r.transcript;
+  $('#dMeta').textContent = `${fmtDate(r.createdAt)}・${fmtTime(r.durationMs || 0)}`;
+  $('#aiStatus').textContent = '';
+  $('#freeInput').value = '';
+  updateCount(); renderResults(); refreshKeyAlerts();
+  setView('detail');
+}
+
+function updateCount(){ $('#dCount').textContent = $('#dText').value.length.toLocaleString() + ' 文字'; }
+
+function renderResults(){
+  const r = getRecord(currentId);
+  const box = $('#resBox');
+  const list = (r && r.results) || [];
+  $('#resCount').textContent = list.length ? list.length + ' 件' : '';
+
+  let audioHtml = '';
+  if (rec.audioUrl && rec.audioForId === currentId){
+    audioHtml = `<div class="alert ok" style="margin-bottom:10px">
+      録音した音声ファイルが使えます（アプリを閉じると消えます）。
+      <a href="${rec.audioUrl}" download="${esc(rec.audioName || 'recording')}" style="color:var(--accent);font-weight:700">音声をダウンロード</a>
+    </div>`;
+  }
+  if (!list.length){ box.innerHTML = audioHtml + '<div class="empty">まだ結果がありません。上のボタンから実行してください。</div>'; return; }
+
+  box.innerHTML = audioHtml + list.map(x => `
+    <div class="res" data-rid="${x.id}">
+      <div class="rh">
+        <span class="name">${esc(x.label)}</span>
+        <span class="meta">${esc(x.model)}・${fmtDate(x.createdAt)}</span>
+      </div>
+      <div class="body">${mdToHtml(x.text)}</div>
+      <div class="btnrow" style="margin-top:10px">
+        <button class="btn sec sm" data-copy="${x.id}">コピー</button>
+        ${x.kind === 'clean' ? `<button class="btn sm" data-apply="${x.id}">本文に反映</button>` : ''}
+        <button class="btn danger sm" data-rm="${x.id}">削除</button>
+      </div>
+    </div>`).join('');
+
+  box.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+    const x = list.find(v => v.id === b.dataset.copy); if (x) copyText(x.text);
+  }));
+  box.querySelectorAll('[data-apply]').forEach(b => b.addEventListener('click', () => {
+    const x = list.find(v => v.id === b.dataset.apply); if (!x) return;
+    if (!confirm('整形結果を文字起こし本文に反映します。元の本文は上書きされます。よろしいですか？')) return;
+    const rr = getRecord(currentId); if (!rr) return;
+    rr.transcript = x.text; saveRecords();
+    $('#dText').value = x.text; updateCount(); toast('本文に反映しました');
+  }));
+  box.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => {
+    const rr = getRecord(currentId); if (!rr) return;
+    rr.results = rr.results.filter(v => v.id !== b.dataset.rm);
+    saveRecords(); renderResults();
+  }));
+}
+
+/* ============================================================
+   AI 実行
+============================================================ */
+let busy = false;
+async function runAction(act){
+  if (busy) return;
+  const r = getRecord(currentId);
+  if (!r) return;
+
+  // 編集中の本文を先に反映
+  const cur = $('#dText').value.trim();
+  if (cur !== r.transcript){ r.transcript = cur; saveRecords(); }
+
+  if (!r.transcript){ toast('文字起こしが空です'); return; }
+  if (!settings.apiKey){ toast('設定タブで API キーを登録してください'); setView('settings'); return; }
+
+  let free = '';
+  if (act === 'free'){
+    free = $('#freeInput').value.trim();
+    if (!free){ toast('指示を入力してください'); return; }
+  }
+
+  const p = buildPrompt(act, r, free);
+  const label = act === 'translate' ? `翻訳（${settings.transLang}）`
+              : act === 'free'      ? `自由指示：${free.slice(0,24)}${free.length>24?'…':''}`
+              : ACT_LABEL[act];
+
+  busy = true;
+  $$('#v-detail [data-act]').forEach(b => b.disabled = true);
+  $('#aiStatus').innerHTML = `<span class="spin"></span>${esc(label)}を実行中…（長い文章では1分ほどかかります）`;
+
+  try {
+    const { text, truncated } = await callClaude(p.system, p.user, p.effort);
+    r.results.unshift({
+      id: uid(), kind: act, label, text,
+      model: modelInfo(settings.model).id.replace('claude-',''),
+      createdAt: Date.now(),
+    });
+    saveRecords(); renderResults();
+    $('#aiStatus').textContent = truncated ? '完了しました（長すぎて途中で切れた可能性があります）' : '完了しました。';
+  } catch(e){
+    $('#aiStatus').innerHTML = `<span style="color:#ff8f99">${esc(e.message)}</span>`;
+  } finally {
+    busy = false;
+    $$('#v-detail [data-act]').forEach(b => b.disabled = false);
+  }
+}
+
+/* ============================================================
+   設定画面
+============================================================ */
+function fillSelect(el, items, val){
+  el.innerHTML = items.map(it => {
+    const [v,l] = Array.isArray(it) ? it : [it,it];
+    return `<option value="${esc(v)}"${v===val?' selected':''}>${esc(l)}</option>`;
+  }).join('');
+}
+function renderSettings(){
+  $('#apiKey').value = settings.apiKey || '';
+  fillSelect($('#setRecogLang'), RECOG_LANGS, settings.recogLang);
+  fillSelect($('#setTransLang'), TRANS_LANGS, settings.transLang);
+  fillSelect($('#setModel'), MODELS.map(m => [m.id, m.label]), settings.model);
+  $('#setAutoClean').checked = !!settings.autoClean;
+  $('#modelNote').textContent = modelInfo(settings.model).effort
+    ? '長い会議の要約もこなせます。料金はモデルと文字数に応じた従量課金です。'
+    : '最も安価で高速ですが、要約の質は上位モデルに劣ります。';
+  const bytes = (localStorage.getItem(LS_REC) || '').length;
+  $('#storeInfo').textContent = `保存件数 ${records.length} 件 / 約 ${(bytes/1024).toFixed(1)} KB`;
+}
+function refreshKeyAlerts(){
+  const has = !!(settings.apiKey || '').trim();
+  $('#keyAlert').classList.toggle('hide', has);
+  $('#aiKeyAlert').classList.toggle('hide', has);
+}
+
+/* ============================================================
+   初期化・イベント
+============================================================ */
+function init(){
+  fillSelect($('#recogLang'), RECOG_LANGS, settings.recogLang);
+  fillSelect($('#transLang'), TRANS_LANGS, settings.transLang);
+  fillSelect($('#modelSel'), MODELS.map(m => [m.id, m.label]), settings.model);
+  refreshKeyAlerts();
+  updateRecUI(); renderLive();
+
+  if (!speechCtor()){
+    showRecError('このブラウザは音声認識に対応していません。iPhone は Safari、Android は Chrome で開いてください。');
+  } else if (!window.isSecureContext){
+    showRecError('このページは HTTPS で開く必要があります。ファイルを直接開くとマイクが使えません（GitHub Pages のURLから開いてください）。');
+  }
+
+  // タブ
+  $$('.tab').forEach(t => t.addEventListener('click', () => setView(t.dataset.view)));
+
+  // 録音
+  $('#recBtn').addEventListener('click', () => {
+    if (!rec.running) startRecording();
+    else if (rec.paused) resumeRecording();
+    else pauseRecording();
+  });
+  $('#stopBtn').addEventListener('click', () => stopRecording(true));
+  $('#recogLang').addEventListener('change', e => { settings.recogLang = e.target.value; saveSettings(); });
+
+  // 詳細
+  $('#backBtn').addEventListener('click', () => setView('list'));
+  $('#dText').addEventListener('input', updateCount);
+  $('#saveTextBtn').addEventListener('click', () => {
+    const r = getRecord(currentId); if (!r) return;
+    r.title = $('#dTitle').value.trim() || r.title;
+    r.transcript = $('#dText').value;
+    saveRecords(); $('#dTitle').value = r.title; toast('保存しました');
+  });
+  $('#copyTextBtn').addEventListener('click', () => copyText($('#dText').value));
+  $('#delBtn').addEventListener('click', () => {
+    if (!confirm('このメモを削除します。よろしいですか？')) return;
+    records = records.filter(r => r.id !== currentId); saveRecords(); setView('list'); toast('削除しました');
+  });
+  $$('#v-detail [data-act]').forEach(b => b.addEventListener('click', () => runAction(b.dataset.act)));
+  $('#transLang').addEventListener('change', e => { settings.transLang = e.target.value; saveSettings(); });
+  $('#modelSel').addEventListener('change', e => { settings.model = e.target.value; saveSettings(); });
+
+  // 設定
+  $('#saveKeyBtn').addEventListener('click', () => {
+    settings.apiKey = $('#apiKey').value.trim(); saveSettings(); refreshKeyAlerts();
+    $('#keyStatus').textContent = settings.apiKey ? 'キーを保存しました。' : 'キーを空にしました。';
+  });
+  $('#clearKeyBtn').addEventListener('click', () => {
+    settings.apiKey = ''; $('#apiKey').value = ''; saveSettings(); refreshKeyAlerts();
+    $('#keyStatus').textContent = 'キーを削除しました。';
+  });
+  $('#testKeyBtn').addEventListener('click', async () => {
+    settings.apiKey = $('#apiKey').value.trim(); saveSettings(); refreshKeyAlerts();
+    $('#keyStatus').innerHTML = '<span class="spin"></span>接続を確認しています…';
+    try {
+      await callClaude('ひとことだけ日本語で答えてください。', 'OK とだけ返してください。', 'low');
+      $('#keyStatus').innerHTML = '<span style="color:var(--accent)">接続できました。AI機能が使えます。</span>';
+    } catch(e){
+      $('#keyStatus').innerHTML = `<span style="color:#ff8f99">${esc(e.message)}</span>`;
+    }
+  });
+  $('#setRecogLang').addEventListener('change', e => { settings.recogLang = e.target.value; saveSettings(); $('#recogLang').value = e.target.value; });
+  $('#setTransLang').addEventListener('change', e => { settings.transLang = e.target.value; saveSettings(); $('#transLang').value = e.target.value; });
+  $('#setModel').addEventListener('change', e => { settings.model = e.target.value; saveSettings(); $('#modelSel').value = e.target.value; renderSettings(); });
+  $('#setAutoClean').addEventListener('change', e => { settings.autoClean = e.target.checked; saveSettings(); });
+
+  // データ
+  $('#exportBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify({ app:'voicememo', version:1, exportedAt:Date.now(), records }, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `録音メモ_バックアップ_${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  });
+  $('#importBtn').addEventListener('click', () => $('#importFile').click());
+  $('#importFile').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const fr = new FileReader();
+    fr.onload = () => {
+      try {
+        const d = JSON.parse(fr.result);
+        const incoming = Array.isArray(d) ? d : (d.records || []);
+        if (!Array.isArray(incoming)) throw new Error('形式が違います');
+        const have = new Set(records.map(r => r.id));
+        const add = incoming.filter(r => r && r.id && !have.has(r.id));
+        records = add.concat(records);
+        records.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+        saveRecords(); renderSettings(); toast(`${add.length} 件を読み込みました`);
+      } catch(err){ toast('読み込めませんでした：' + err.message); }
+    };
+    fr.readAsText(f); e.target.value = '';
+  });
+  $('#wipeBtn').addEventListener('click', () => {
+    if (!confirm('保存したメモをすべて削除します。元に戻せません。よろしいですか？')) return;
+    records = []; saveRecords(); renderSettings(); toast('削除しました');
+  });
+
+  // 録音中の離脱防止 / 画面復帰時のウェイクロック再取得
+  window.addEventListener('beforeunload', e => {
+    if (rec.running){ e.preventDefault(); e.returnValue = ''; }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && rec.running && !rec.paused) acquireWakeLock();
+  });
+
+  if ('serviceWorker' in navigator){
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  }
+}
+
+init();
+</script>
+</body>
+</html>
