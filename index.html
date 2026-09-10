@@ -270,6 +270,7 @@ audio{width:100%;margin-top:4px}
       <p class="note" id="modelNote"></p>
     </div>
     <label class="sw" style="margin-top:12px"><input type="checkbox" id="setAutoClean">録音を停止したら自動で「文字起こしを整える」を実行する</label>
+    <label class="sw" style="margin-top:10px"><input type="checkbox" id="setAutoSummary">録音を停止したら自動で「要約する」を実行する</label>
     <label class="sw" style="margin-top:10px"><input type="checkbox" id="setOverlap">重ね録りで取りこぼしを防ぐ（推奨・端末が対応しない場合は自動で無効化）</label>
   </div>
 
@@ -429,7 +430,7 @@ function loadSettings(){
   try { s = JSON.parse(localStorage.getItem(LS_SET) || '{}') || {}; } catch(e){}
   return Object.assign({
     apiKey:'', model:'claude-opus-5', recogLang:'ja-JP', transLang:'英語',
-    autoClean:false, overlap:true
+    autoClean:false, autoSummary:false, overlap:true
   }, s);
 }
 function saveSettings(){ try{ localStorage.setItem(LS_SET, JSON.stringify(settings)); }catch(e){ toast('設定の保存に失敗しました'); } }
@@ -639,7 +640,7 @@ const SYS = {
 
 - 発言された事実・数値・固有名詞・日付は落とさない
 - 決まったこと、宿題になったことは明示する
-- 요約しすぎず、後で読んで内容が復元できる粒度で書く
+- 要約しすぎず、後で読んで内容が復元できる粒度で書く
 - 前置きは書かず、箇条書きだけを出力する${instruction ? '\n- とくに次の観点に関わる内容は必ず含める：' + instruction : ''}`,
 
   chunkNote: '\n\n（これは長い文章の一部です。前後の部分は別途処理されるため、この部分だけを対象にしてください。冒頭・末尾が文の途中で切れていても補完しないでください。）',
@@ -933,7 +934,17 @@ async function stopRecording(save){
   openDetail(r.id);
   toast('保存しました');
 
-  if (settings.autoClean && settings.apiKey) runAction('clean');
+  if (settings.apiKey) runAutoActions();
+}
+
+/* 停止直後の自動処理（整形 → 要約の順に実行する） */
+async function runAutoActions(){
+  const id = currentId;
+  if (settings.autoClean){
+    await runAction('clean');
+    if (currentId !== id) return;   // 途中で別のメモを開いたら中断
+  }
+  if (settings.autoSummary) await runAction('summary');
 }
 
 function updateRecUI(){
@@ -1141,7 +1152,7 @@ async function runAction(act){
         const out = await callClaude(
           sys + (chunks.length > 1 ? SYS.chunkNote : ''),
           chunks[i],
-          { effort: act === 'clean' ? 'low' : 'low', signal: sig, maxTokens: 32000,
+          { effort: 'low', signal: sig, maxTokens: 32000,
             onDelta: (_d, acc) => streamSet(head ? head + '\n\n' + acc : acc) }
         );
         parts.push(out.text); truncated = truncated || out.truncated;
@@ -1219,6 +1230,7 @@ async function renderSettings(){
   fillSelect($('#setTransLang'), TRANS_LANGS, settings.transLang);
   fillSelect($('#setModel'), MODELS.map(m => [m.id, m.label]), settings.model);
   $('#setAutoClean').checked = !!settings.autoClean;
+  $('#setAutoSummary').checked = !!settings.autoSummary;
   $('#setOverlap').checked = settings.overlap !== false;
   $('#modelNote').textContent = modelInfo(settings.model).effort
     ? '長い会議の要約もこなせます。料金はモデルと文字数に応じた従量課金です。'
@@ -1347,6 +1359,7 @@ async function init(){
   $('#setTransLang').addEventListener('change', e => { settings.transLang = e.target.value; saveSettings(); $('#transLang').value = e.target.value; });
   $('#setModel').addEventListener('change', e => { settings.model = e.target.value; saveSettings(); $('#modelSel').value = e.target.value; renderSettings(); });
   $('#setAutoClean').addEventListener('change', e => { settings.autoClean = e.target.checked; saveSettings(); });
+  $('#setAutoSummary').addEventListener('change', e => { settings.autoSummary = e.target.checked; saveSettings(); });
   $('#setOverlap').addEventListener('change', e => { settings.overlap = e.target.checked; saveSettings(); });
 
   // データ
