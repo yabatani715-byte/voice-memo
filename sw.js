@@ -1,6 +1,6 @@
 // オフライン対応用 Service Worker（stale-while-revalidate）
 // ※ API 通信（POST）とクロスオリジンはキャッシュしない
-const CACHE = 'voicememo-v2';
+const CACHE = 'voicememo-v3';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
